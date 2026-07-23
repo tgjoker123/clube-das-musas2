@@ -1,0 +1,32 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(npm config *)",
+      "Bash(npm install *)",
+      "Bash(pnpm -v)",
+      "Bash(git init *)",
+      "Bash(npm ping *)",
+      "Bash(npm view *)",
+      "Bash(npm init *)",
+      "Bash(npx prisma *)",
+      "Bash(npx --yes create-next-app@latest --help)",
+      "Bash(npx --yes create-next-app@latest apps/web --ts --tailwind --eslint --app --src-dir --import-alias \"@/*\" --skip-install --disable-git --empty --use-pnpm --no-react-compiler)",
+      "Bash(mkdir -p apps)",
+      "Bash(touch apps/testfile.txt)",
+      "Bash(rm apps/testfile.txt)",
+      "PowerShell(npx --yes @nestjs/cli@latest new api --directory apps/api --package-manager pnpm --skip-install --skip-git --language TS 2>&1)",
+      "Bash(rm apps/web/pnpm-workspace.yaml apps/admin/pnpm-workspace.yaml)",
+      "Bash(rm apps/web/CLAUDE.md apps/web/AGENTS.md apps/admin/CLAUDE.md apps/admin/AGENTS.md)",
+      "Read(//c/Users/migue/**)",
+      "Bash(pnpm config *)",
+      "Bash(env)",
+      "Bash(pnpm store *)",
+      "Bash(pnpm add *)",
+      "Bash(pnpm remove *)",
+      "Bash(mkdir -p \"/c/Users/migue/OneDrive/Área de Trabalho/ClubeDasMusas/.husky\")",
+      "Bash(\"./node_modules/.bin/turbo\" --version)",
+      "Bash(echo \"exit=$?\")",
+      "Bash(node -e ' *)"
+    ]
+  }
+}

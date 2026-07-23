@@ -1,0 +1,137 @@
+@import "tailwindcss";
+
+/* Garante que classes Tailwind usadas dentro de packages/ui sejam
+   detectadas mesmo quando importado de outro app via workspace. */
+@source "../";
+
+/*
+ * Fonte da verdade visual: docs/07_DESIGN_SYSTEM.md
+ * Estes valores DEVEM permanecer em sincronia com packages/ui/src/tokens/*.ts.
+ * Nenhum app deve declarar cor, fonte, espaçamento ou radius fora daqui.
+ */
+
+@theme {
+  /* Cores — valores padrão (tema Luxo), sobrescritos por [data-theme] abaixo */
+  --color-bg-base: #0d0d0f;
+  --color-bg-elevated: #18181b;
+  --color-bg-sunken: #000000;
+  --color-fg-primary: #f5f1e8;
+  --color-fg-secondary: #a8a29a;
+  --color-accent-gold: #d4af37;
+  --color-accent-gold-muted: #8c7530;
+  --color-border: #2a2a2e;
+  --color-success: #4f7a5c;
+  --color-warning: #b8894a;
+  --color-error: #a34c4c;
+  --color-info: #5b7a96;
+
+  /* Famílias de fonte */
+  --font-display: "Playfair Display", Georgia, serif;
+  --font-sans: "Inter", -apple-system, BlinkMacSystemFont, sans-serif;
+
+  /* Escala tipográfica — docs/07_DESIGN_SYSTEM.md §3.1 (tamanhos mobile;
+     sobrescritos em telas >= 641px pelo media query abaixo). Cada par
+     gera as utilities `text-{nome}` com o line-height correspondente. */
+  --text-display: 40px;
+  --text-display--line-height: 1.2;
+  --text-h1: 28px;
+  --text-h1--line-height: 1.2;
+  --text-h2: 22px;
+  --text-h2--line-height: 1.2;
+  --text-h3: 18px;
+  --text-h3--line-height: 1.3;
+  --text-body: 15px;
+  --text-body--line-height: 1.5;
+  --text-small: 13px;
+  --text-small--line-height: 1.5;
+  --text-caption: 11px;
+  --text-caption--line-height: 1.4;
+
+  /* Radius — docs/07_DESIGN_SYSTEM.md §5 */
+  --radius-sm: 8px;
+  --radius-md: 12px;
+  --radius-lg: 20px;
+  --radius-pill: 9999px;
+
+  /* Espaçamento — docs/07_DESIGN_SYSTEM.md §4.
+   *
+   * NÃO redefinimos --spacing-{3xs,2xs,xs,sm,md,lg,xl,2xl} aqui: no
+   * Tailwind v4, o namespace --spacing-* é compartilhado por TODAS as
+   * utilities baseadas em espaçamento (p-, m-, gap-, w-, h-, max-w-,
+   * min-w- etc.) — sobrescrever as chaves nomeadas (sm/md/lg/xl/2xl)
+   * quebraria silenciosamente utilities nativas como `max-w-sm`. Nossa
+   * escala de 4/8/12/16/24/32/48/64px já É a escala numérica padrão do
+   * Tailwind (múltiplos de 4px: 1,2,3,4,6,8,12,16) — usar `p-4`, `gap-6`
+   * etc. diretamente, sem tokens nomeados próprios. Ver
+   * packages/ui/src/tokens/spacing.ts para a tabela de conversão.
+   */
+
+  /* Breakpoints — docs/07_DESIGN_SYSTEM.md §10 */
+  --breakpoint-tablet: 641px;
+  --breakpoint-desktop: 1025px;
+}
+
+/* Tema Luxo (padrão) — preto + dourado */
+:root,
+[data-theme="luxo"] {
+  --color-bg-base: #0d0d0f;
+  --color-bg-elevated: #18181b;
+  --color-bg-sunken: #000000;
+  --color-fg-primary: #f5f1e8;
+  --color-fg-secondary: #a8a29a;
+  --color-accent-gold: #d4af37;
+  --color-accent-gold-muted: #8c7530;
+  --color-border: #2a2a2e;
+  --color-success: #4f7a5c;
+  --color-warning: #b8894a;
+  --color-error: #a34c4c;
+  --color-info: #5b7a96;
+}
+
+/* Tema Elegance — branco + dourado (dourado recalibrado para contraste AA) */
+[data-theme="elegance"] {
+  --color-bg-base: #fafaf7;
+  --color-bg-elevated: #ffffff;
+  --color-bg-sunken: #f0efe9;
+  --color-fg-primary: #1a1a1c;
+  --color-fg-secondary: #5c5a54;
+  --color-accent-gold: #a9791f;
+  --color-accent-gold-muted: #c9a227;
+  --color-border: #e4e2da;
+  --color-success: #3d6047;
+  --color-warning: #96692f;
+  --color-error: #8a3a3a;
+  --color-info: #3f5f7a;
+}
+
+/*
+ * Tokens de movimento — fora de @theme (não geram utilities Tailwind),
+ * consumidos via var() em componentes. Ver packages/ui/src/tokens/motion.ts
+ * para os valores equivalentes tipados em TypeScript.
+ */
+:root {
+  --duration-micro: 180ms;
+  --duration-transition: 350ms;
+  --duration-celebration: 600ms;
+  --ease-enter: cubic-bezier(0, 0, 0.2, 1);
+  --ease-exit: cubic-bezier(0.4, 0, 1, 1);
+}
+
+/* Escala tipográfica responsiva — docs/07_DESIGN_SYSTEM.md §3.1 */
+@media (min-width: 641px) {
+  :root {
+    --text-display: 48px;
+    --text-h1: 32px;
+    --text-h2: 24px;
+    --text-body: 16px;
+  }
+}
+
+body {
+  background-color: var(--color-bg-base);
+  color: var(--color-fg-primary);
+  font-family: var(--font-sans);
+  transition:
+    background-color var(--duration-transition) var(--ease-enter),
+    color var(--duration-transition) var(--ease-enter);
+}

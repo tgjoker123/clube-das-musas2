@@ -1,0 +1,205 @@
+// Fonte de verdade do schema físico do banco — ver docs/04_MODELO_DE_DADOS.md.
+// Fase 1 — Identidade e Autenticação: apenas os models necessários para
+// cadastro/login/onboarding e preparação multi-tenant. Os demais módulos
+// (treinos, gamificação, marketplace, pagamentos) chegam nas fases
+// seguintes, cada um acompanhado de sua política de RLS na mesma migration
+// (ver docs/04_MODELO_DE_DADOS.md §7 — "nunca RLS depois").
+
+generator client {
+  provider            = "prisma-client"
+  output              = "../src/generated/prisma"
+  // Nossos pacotes não têm etapa de build — rodam via execução nativa de
+  // TypeScript (Node) ou bundlers. Sem isso, o arquivo gerado importa
+  // módulos irmãos sem extensão, o que a resolução ESM nativa do Node não
+  // aceita (só bundlers "adivinham" a extensão).
+  importFileExtension = "ts"
+}
+
+// A partir do Prisma 7, a connection string NÃO fica mais no schema — ela é
+// fornecida em tempo de execução via driver adapter (ver src/client.ts) e,
+// para a CLI (migrate/studio), via prisma.config.ts.
+datasource db {
+  provider = "postgresql"
+}
+
+// ---------------------------------------------------------------------------
+// Enums
+// ---------------------------------------------------------------------------
+
+enum UserRole {
+  admin
+  professor
+  student
+  partner
+
+  @@map("user_role")
+}
+
+enum UserStatus {
+  active
+  suspended
+
+  @@map("user_status")
+}
+
+enum ThemeName {
+  luxo
+  elegance
+
+  @@map("theme_name")
+}
+
+enum ProfessorStatus {
+  active
+  suspended
+
+  @@map("professor_status")
+}
+
+enum StudentStatus {
+  active
+  inactive
+  suspended
+  delinquent
+
+  @@map("student_status")
+}
+
+enum PartnerStatus {
+  pending
+  active
+  inactive
+
+  @@map("partner_status")
+}
+
+// ---------------------------------------------------------------------------
+// Identidade (docs/04_MODELO_DE_DADOS.md §4.1)
+// ---------------------------------------------------------------------------
+
+/// Perfil primário de identidade — espelha auth.users do Supabase Auth.
+/// RLS: Padrão C (estritamente próprio) — ver packages/database/src/rls.
+model User {
+  id         String     @id @default(uuid()) @db.Uuid
+  authUserId String     @unique @map("auth_user_id") @db.Uuid
+  email      String     @unique
+  phone      String?
+  fullName   String     @map("full_name")
+  avatarUrl  String?    @map("avatar_url")
+  role       UserRole
+  status     UserStatus @default(active)
+  createdAt  DateTime   @default(now()) @map("created_at")
+  updatedAt  DateTime   @updatedAt @map("updated_at")
+  deletedAt  DateTime?  @map("deleted_at")
+
+  professor Professor?
+  student   Student?
+  partner   Partner?
+  auditLogs AuditLog[]
+
+  @@map("users")
+}
+
+// ---------------------------------------------------------------------------
+// Professores (docs/04_MODELO_DE_DADOS.md §4.2) — o "professor_id" desta
+// tabela é o discriminador de tenant usado por todo o restante do sistema.
+// ---------------------------------------------------------------------------
+
+/// RLS: Padrão A (tenant do professor).
+model Professor {
+  id              String          @id @default(uuid()) @db.Uuid
+  userId          String          @unique @map("user_id") @db.Uuid
+  businessName    String          @map("business_name")
+  phone           String?
+  themePreference ThemeName       @default(luxo) @map("theme_preference")
+  status          ProfessorStatus @default(active)
+  createdAt       DateTime        @default(now()) @map("created_at")
+  updatedAt       DateTime        @updatedAt @map("updated_at")
+
+  user     User      @relation(fields: [userId], references: [id])
+  students Student[]
+
+  @@map("professors")
+}
+
+// ---------------------------------------------------------------------------
+// Alunas (docs/04_MODELO_DE_DADOS.md §4.3)
+// ---------------------------------------------------------------------------
+
+/// A aluna é sempre criada pelo professor primeiro (userId nulo) e ativa a
+/// própria conta depois via convite (inviteToken) — nunca se auto-cadastra
+/// livremente (ver docs/12_ARQUITETURA_DE_EXPERIENCIA.md §2 e
+/// docs/03_REGRAS_DE_NEGOCIO.md). RLS: Padrão B (aluna via professor).
+model Student {
+  id              String        @id @default(uuid()) @db.Uuid
+  userId          String?       @unique @map("user_id") @db.Uuid
+  professorId     String        @map("professor_id") @db.Uuid
+  fullName        String        @map("full_name")
+  avatarUrl       String?       @map("avatar_url")
+  /// E-mail para onde o convite de ativação é enviado — só existe como
+  /// `users.email` depois que a aluna ativa a própria conta.
+  email           String?
+  phone           String?
+  birthDate       DateTime?     @map("birth_date") @db.Date
+  joinedAt        DateTime      @default(now()) @map("joined_at") @db.Date
+  objective       String?
+  status          StudentStatus @default(active)
+  inviteToken     String?       @unique @map("invite_token")
+  inviteExpiresAt DateTime?     @map("invite_expires_at")
+  createdAt       DateTime      @default(now()) @map("created_at")
+  updatedAt       DateTime      @updatedAt @map("updated_at")
+  deletedAt       DateTime?     @map("deleted_at")
+
+  user      User?     @relation(fields: [userId], references: [id])
+  professor Professor @relation(fields: [professorId], references: [id])
+
+  @@index([professorId, status])
+  @@map("students")
+}
+
+// ---------------------------------------------------------------------------
+// Parceiros (docs/04_MODELO_DE_DADOS.md §4.8) — cadastro próprio, mas só
+// pode vender no Marketplace após aprovação do Admin (Fase futura).
+// ---------------------------------------------------------------------------
+
+/// RLS: Padrão D (tenant do parceiro).
+model Partner {
+  id          String        @id @default(uuid()) @db.Uuid
+  userId      String        @unique @map("user_id") @db.Uuid
+  name        String
+  logoUrl     String?       @map("logo_url")
+  description String?
+  category    String?
+  region      String?
+  status      PartnerStatus @default(pending)
+  approvedBy  String?       @map("approved_by") @db.Uuid
+  approvedAt  DateTime?     @map("approved_at")
+  createdAt   DateTime      @default(now()) @map("created_at")
+  updatedAt   DateTime      @updatedAt @map("updated_at")
+
+  user User @relation(fields: [userId], references: [id])
+
+  @@map("partners")
+}
+
+// ---------------------------------------------------------------------------
+// Auditoria (docs/04_MODELO_DE_DADOS.md §4.1) — append-only.
+// ---------------------------------------------------------------------------
+
+/// RLS: Padrão G (auditoria).
+model AuditLog {
+  id           String   @id @default(uuid()) @db.Uuid
+  userId       String?  @map("user_id") @db.Uuid
+  action       String
+  resourceType String?  @map("resource_type")
+  resourceId   String?  @map("resource_id") @db.Uuid
+  ipAddress    String?  @map("ip_address")
+  metadata     Json?
+  createdAt    DateTime @default(now()) @map("created_at")
+
+  user User? @relation(fields: [userId], references: [id])
+
+  @@index([userId, createdAt])
+  @@index([resourceType, resourceId])
+  @@map("audit_logs")
+}
