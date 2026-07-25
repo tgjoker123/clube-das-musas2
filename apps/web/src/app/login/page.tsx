@@ -13,6 +13,7 @@ interface WhoAmI {
 
 export default function LoginPage() {
   const router = useRouter();
+  const [area, setArea] = useState<"aluna" | "professora">("aluna");
   const [email, setEmail] = useState("");
   const [senha, setSenha] = useState("");
   const [erro, setErro] = useState<string | null>(null);
@@ -49,7 +50,32 @@ export default function LoginPage() {
           Bem-vinda de volta
         </h1>
 
-        <form onSubmit={handleSubmit} className="mt-8 space-y-4">
+        <div className="mt-6 flex rounded-full border border-white/10 bg-white/5 p-1 text-sm">
+          <button
+            type="button"
+            onClick={() => setArea("aluna")}
+            className={`flex-1 rounded-full py-2 font-medium transition-colors ${
+              area === "aluna"
+                ? "gold-button"
+                : "text-white/50 hover:text-white"
+            }`}
+          >
+            Área da Aluna
+          </button>
+          <button
+            type="button"
+            onClick={() => setArea("professora")}
+            className={`flex-1 rounded-full py-2 font-medium transition-colors ${
+              area === "professora"
+                ? "gold-button"
+                : "text-white/50 hover:text-white"
+            }`}
+          >
+            Área da Professora
+          </button>
+        </div>
+
+        <form onSubmit={handleSubmit} className="mt-6 space-y-4">
           <input
             type="email"
             placeholder="E-mail"
@@ -76,11 +102,24 @@ export default function LoginPage() {
           </button>
         </form>
 
-        <p className="mt-6 text-center text-xs text-white/40">
-          <Link href="/esqueci-senha" className="hover:text-[color:var(--color-gold-light)]">
-            Esqueci minha senha
-          </Link>
-        </p>
+        <div className="mt-6 space-y-2 text-center text-xs text-white/40">
+          <p>
+            <Link href="/esqueci-senha" className="hover:text-[color:var(--color-gold-light)]">
+              Esqueci minha senha
+            </Link>
+          </p>
+          {area === "aluna" && (
+            <p>
+              Ainda não é aluna?{" "}
+              <Link
+                href="/quero-fazer-parte"
+                className="text-[color:var(--color-gold-light)] hover:underline"
+              >
+                Quero fazer parte
+              </Link>
+            </p>
+          )}
+        </div>
       </div>
     </main>
   );

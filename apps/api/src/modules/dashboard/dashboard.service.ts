@@ -15,10 +15,13 @@ export class DashboardService {
   constructor(private readonly prisma: PrismaService) {}
 
   async getIndicadores(professorId: string) {
-    const alunas = await this.prisma.aluna.findMany({
-      where: { professorId },
-      include: { checkIns: { orderBy: { data: "desc" }, take: 1 } },
-    });
+    const [alunas, professor] = await Promise.all([
+      this.prisma.aluna.findMany({
+        where: { professorId },
+        include: { checkIns: { orderBy: { data: "desc" }, take: 1 } },
+      }),
+      this.prisma.professor.findUnique({ where: { id: professorId } }),
+    ]);
 
     const hoje = new Date();
     hoje.setHours(0, 0, 0, 0);
@@ -37,8 +40,14 @@ export class DashboardService {
       return hoje.getTime() - ultimoCheckIn.data.getTime() > seteDiasEmMs;
     });
 
+    const valorMensalidade = professor?.valorMensalidade
+      ? Number(professor.valorMensalidade)
+      : null;
+
     return {
       totalAlunasAtivas: ativas.length,
+      valorMensalidade,
+      faturamentoEstimado: valorMensalidade !== null ? valorMensalidade * ativas.length : null,
       totalAlunasPorStatus: {
         ativa: alunas.filter((a) => a.status === "ativa").length,
         suspensa: alunas.filter((a) => a.status === "suspensa").length,

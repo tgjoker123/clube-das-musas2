@@ -6,4 +6,5 @@ export interface CurrentUser {
   role: UserRole;
   professorId?: string;
   alunaId?: string;
+  isAdmin?: boolean;
 }

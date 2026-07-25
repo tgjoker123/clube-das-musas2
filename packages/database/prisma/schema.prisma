@@ -19,12 +19,25 @@ enum StatusCheckIn {
   concluido
 }
 
+model Lead {
+  id        String   @id @default(uuid())
+  nome      String
+  email     String
+  telefone  String
+  mensagem  String?
+  createdAt DateTime @default(now())
+
+  @@map("leads")
+}
+
 model Professor {
   id         String   @id @default(uuid())
   authUserId String   @unique
   nome       String
   email      String   @unique
   status     String   @default("ativo")
+  valorMensalidade Decimal?
+  isAdmin    Boolean  @default(false)
   createdAt  DateTime @default(now())
 
   alunas      Aluna[]

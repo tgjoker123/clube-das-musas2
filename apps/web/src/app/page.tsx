@@ -60,12 +60,18 @@ export default function HomePage() {
           exclusividade.
         </p>
 
-        <div className="animate-fade-in-up stagger-3 mt-10">
+        <div className="animate-fade-in-up stagger-3 mt-10 flex flex-col gap-4 sm:flex-row">
           <Link
             href="/login"
             className="gold-button rounded-full px-8 py-3 text-sm font-medium tracking-wide"
           >
             Entrar
+          </Link>
+          <Link
+            href="/quero-fazer-parte"
+            className="gold-outline-button rounded-full px-8 py-3 text-sm font-medium tracking-wide"
+          >
+            Quero fazer parte
           </Link>
         </div>
       </div>

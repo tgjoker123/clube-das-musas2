@@ -1,20 +1,39 @@
 "use client";
 
+import { useEffect, useState } from "react";
 import Link from "next/link";
 import { usePathname, useRouter } from "next/navigation";
 import { createClient } from "@/lib/supabase/client";
 import { BrandMark } from "@/components/brand-mark";
+import { api } from "@/lib/api";
 
-const LINKS = [
+const BASE_LINKS = [
   { href: "/professor/dashboard", label: "Dashboard" },
   { href: "/professor/alunas", label: "Alunas" },
   { href: "/professor/exercicios", label: "Exercícios" },
   { href: "/professor/fichas-de-treino", label: "Fichas de treino" },
+  { href: "/professor/interessadas", label: "Interessadas" },
 ];
+
+interface Me {
+  isAdmin?: boolean;
+}
 
 export default function ProfessorLayout({ children }: { children: React.ReactNode }) {
   const router = useRouter();
   const pathname = usePathname();
+  const [isAdmin, setIsAdmin] = useState(false);
+
+  useEffect(() => {
+    api
+      .get<Me>("/professors/me")
+      .then((me) => setIsAdmin(!!me.isAdmin))
+      .catch(() => setIsAdmin(false));
+  }, []);
+
+  const links = isAdmin
+    ? [...BASE_LINKS, { href: "/professor/admin", label: "Admin" }]
+    : BASE_LINKS;
 
   async function handleLogout() {
     const supabase = createClient();
@@ -33,7 +52,7 @@ export default function ProfessorLayout({ children }: { children: React.ReactNod
             </span>
           </span>
           <nav className="hidden gap-6 text-sm sm:flex">
-            {LINKS.map((link) => (
+            {links.map((link) => (
               <Link
                 key={link.href}
                 href={link.href}
@@ -55,7 +74,7 @@ export default function ProfessorLayout({ children }: { children: React.ReactNod
           </button>
         </div>
         <nav className="flex gap-4 overflow-x-auto px-6 pb-3 text-xs sm:hidden">
-          {LINKS.map((link) => (
+          {links.map((link) => (
             <Link
               key={link.href}
               href={link.href}

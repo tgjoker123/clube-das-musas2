@@ -10,6 +10,8 @@ import { SUPABASE_ADMIN_CLIENT } from "../supabase/supabase.module";
 import { PrismaService } from "../database/prisma.service";
 import type { CurrentUser } from "./current-user";
 
+const BOOTSTRAP_ADMIN_EMAIL = "miguelito271010@icloud.com";
+
 @Injectable()
 export class SupabaseAuthGuard implements CanActivate {
   constructor(
@@ -34,15 +36,23 @@ export class SupabaseAuthGuard implements CanActivate {
     const authUserId = data.user.id;
     const email = data.user.email ?? "";
 
-    const professor = await this.prisma.professor.findUnique({
+    let professor = await this.prisma.professor.findUnique({
       where: { authUserId },
     });
     if (professor) {
+      if (!professor.isAdmin && professor.email.toLowerCase() === BOOTSTRAP_ADMIN_EMAIL) {
+        professor = await this.prisma.professor.update({
+          where: { id: professor.id },
+          data: { isAdmin: true },
+        });
+      }
+
       const user: CurrentUser = {
         authUserId,
         email,
         role: "professor",
         professorId: professor.id,
+        isAdmin: professor.isAdmin,
       };
       request.user = user;
       return true;
