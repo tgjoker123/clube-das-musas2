@@ -1,4 +1,4 @@
-FROM node:20-slim AS base
+FROM node:22-slim AS base
 WORKDIR /app
 RUN npm install -g pnpm@11.16.0
 
@@ -14,7 +14,7 @@ COPY . .
 RUN pnpm --filter @musas/database run generate
 RUN pnpm --filter @musas/api run build
 
-FROM node:20-slim AS runner
+FROM node:22-slim AS runner
 WORKDIR /app
 COPY --from=build /app ./
 ENV NODE_ENV=production
