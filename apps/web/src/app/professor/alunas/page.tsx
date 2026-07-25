@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import Link from "next/link";
 import { api } from "@/lib/api";
 
@@ -15,12 +15,15 @@ interface Aluna {
 
 export default function AlunasPage() {
   const [alunas, setAlunas] = useState<Aluna[]>([]);
+  const [busca, setBusca] = useState("");
   const [erro, setErro] = useState<string | null>(null);
   const [mostrarForm, setMostrarForm] = useState(false);
   const [nome, setNome] = useState("");
   const [email, setEmail] = useState("");
   const [dataNascimento, setDataNascimento] = useState("");
   const [salvando, setSalvando] = useState(false);
+  const [excluindoId, setExcluindoId] = useState<string | null>(null);
+  const [confirmandoId, setConfirmandoId] = useState<string | null>(null);
 
   function carregar() {
     api
@@ -30,6 +33,12 @@ export default function AlunasPage() {
   }
 
   useEffect(carregar, []);
+
+  const alunasFiltradas = useMemo(() => {
+    const termo = busca.trim().toLowerCase();
+    if (!termo) return alunas;
+    return alunas.filter((a) => a.nome.toLowerCase().includes(termo));
+  }, [alunas, busca]);
 
   async function handleCreate(e: React.FormEvent) {
     e.preventDefault();
@@ -55,6 +64,20 @@ export default function AlunasPage() {
       alert("Convite enviado.");
     } catch (err) {
       alert(err instanceof Error ? err.message : "Erro ao enviar convite");
+    }
+  }
+
+  async function handleDelete(id: string) {
+    setExcluindoId(id);
+    setErro(null);
+    try {
+      await api.delete(`/students/${id}`);
+      setConfirmandoId(null);
+      carregar();
+    } catch (err) {
+      setErro(err instanceof Error ? err.message : "Erro ao excluir aluna");
+    } finally {
+      setExcluindoId(null);
     }
   }
 
@@ -105,10 +128,18 @@ export default function AlunasPage() {
         </form>
       )}
 
+      <input
+        type="search"
+        placeholder="Buscar aluna pelo nome..."
+        value={busca}
+        onChange={(e) => setBusca(e.target.value)}
+        className="app-input max-w-sm"
+      />
+
       {erro && <p className="text-red-600">{erro}</p>}
 
       <div className="overflow-x-auto rounded-2xl border border-neutral-200 bg-white shadow-sm">
-        <table className="w-full min-w-[560px] text-left text-sm">
+        <table className="w-full min-w-[620px] text-left text-sm">
           <thead>
             <tr className="border-b">
               <th className="px-4 py-3">Nome</th>
@@ -119,7 +150,7 @@ export default function AlunasPage() {
             </tr>
           </thead>
           <tbody>
-            {alunas.map((a) => (
+            {alunasFiltradas.map((a) => (
               <tr key={a.id} className="border-b last:border-b-0">
                 <td className="px-4 py-3">
                   <Link
@@ -135,17 +166,51 @@ export default function AlunasPage() {
                   {a.authUserId ? "Ativo" : "Pendente"}
                 </td>
                 <td className="px-4 py-3">
-                  {!a.authUserId && (
-                    <button
-                      onClick={() => handleInvite(a.id)}
-                      className="text-sm text-[color:var(--color-gold-dark)] hover:underline"
-                    >
-                      Enviar convite
-                    </button>
-                  )}
+                  <div className="flex items-center justify-end gap-3 text-xs font-medium">
+                    {!a.authUserId && (
+                      <button
+                        onClick={() => handleInvite(a.id)}
+                        className="app-link-gold"
+                      >
+                        Enviar convite
+                      </button>
+                    )}
+                    {confirmandoId === a.id ? (
+                      <>
+                        <span className="text-neutral-500">Apaga tudo dela. Confirmar?</span>
+                        <button
+                          onClick={() => handleDelete(a.id)}
+                          disabled={excluindoId === a.id}
+                          className="text-red-600 hover:text-red-700 disabled:opacity-50"
+                        >
+                          {excluindoId === a.id ? "Excluindo..." : "Sim, excluir"}
+                        </button>
+                        <button
+                          onClick={() => setConfirmandoId(null)}
+                          className="text-neutral-400 hover:text-neutral-600"
+                        >
+                          Cancelar
+                        </button>
+                      </>
+                    ) : (
+                      <button
+                        onClick={() => setConfirmandoId(a.id)}
+                        className="text-neutral-400 hover:text-red-600"
+                      >
+                        Excluir
+                      </button>
+                    )}
+                  </div>
                 </td>
               </tr>
             ))}
+            {alunasFiltradas.length === 0 && (
+              <tr>
+                <td colSpan={5} className="px-4 py-6 text-center text-neutral-500">
+                  Nenhuma aluna encontrada.
+                </td>
+              </tr>
+            )}
           </tbody>
         </table>
       </div>

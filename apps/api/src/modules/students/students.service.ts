@@ -84,6 +84,17 @@ export class StudentsService {
     });
   }
 
+  async remove(professorId: string, alunaId: string) {
+    const aluna = await this.findOwnedOrThrow(professorId, alunaId);
+    await this.prisma.aluna.delete({ where: { id: alunaId } });
+
+    if (aluna.authUserId) {
+      await this.supabase.auth.admin.deleteUser(aluna.authUserId).catch(() => undefined);
+    }
+
+    return { ok: true };
+  }
+
   async addAnamnese(professorId: string, alunaId: string, dto: CreateAnamneseDto) {
     await this.findOwnedOrThrow(professorId, alunaId);
     return this.prisma.anamnese.create({

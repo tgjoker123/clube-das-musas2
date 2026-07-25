@@ -1,6 +1,7 @@
 import {
   Body,
   Controller,
+  Delete,
   Get,
   Param,
   Patch,
@@ -55,6 +56,13 @@ export class StudentsController {
   @Roles("professor")
   getById(@CurrentUser() user: CurrentUserType, @Param("id") id: string) {
     return this.studentsService.getById(user.professorId!, id);
+  }
+
+  @Delete(":id")
+  @UseGuards(SupabaseAuthGuard, RolesGuard)
+  @Roles("professor")
+  remove(@CurrentUser() user: CurrentUserType, @Param("id") id: string) {
+    return this.studentsService.remove(user.professorId!, id);
   }
 
   @Patch(":id")

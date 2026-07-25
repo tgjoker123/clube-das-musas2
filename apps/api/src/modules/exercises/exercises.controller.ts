@@ -1,4 +1,4 @@
-import { Body, Controller, Get, Param, Patch, Post, UseGuards } from "@nestjs/common";
+import { Body, Controller, Delete, Get, Param, Patch, Post, UseGuards } from "@nestjs/common";
 import { SupabaseAuthGuard } from "../../core/auth/supabase-auth.guard";
 import { RolesGuard } from "../../core/auth/roles.guard";
 import { Roles } from "../../core/auth/roles.decorator";
@@ -31,5 +31,10 @@ export class ExercisesController {
     @Body() dto: UpdateExerciseDto,
   ) {
     return this.exercisesService.update(user.professorId!, id, dto);
+  }
+
+  @Delete(":id")
+  remove(@CurrentUser() user: CurrentUserType, @Param("id") id: string) {
+    return this.exercisesService.remove(user.professorId!, id);
   }
 }

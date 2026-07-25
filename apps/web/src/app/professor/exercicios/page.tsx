@@ -21,11 +21,13 @@ function ExercicioCard({
   className?: string;
 }) {
   const [editando, setEditando] = useState(false);
+  const [confirmandoExclusao, setConfirmandoExclusao] = useState(false);
   const [nome, setNome] = useState(exercicio.nome);
   const [grupoMuscular, setGrupoMuscular] = useState(exercicio.grupoMuscular);
   const [videoUrl, setVideoUrl] = useState(exercicio.videoUrl ?? "");
   const [instrucoes, setInstrucoes] = useState(exercicio.instrucoes ?? "");
   const [salvando, setSalvando] = useState(false);
+  const [excluindo, setExcluindo] = useState(false);
   const [erro, setErro] = useState<string | null>(null);
 
   async function salvar(e: React.FormEvent) {
@@ -43,6 +45,20 @@ function ExercicioCard({
     }
   }
 
+  async function excluir() {
+    setExcluindo(true);
+    setErro(null);
+    try {
+      await api.delete(`/exercises/${exercicio.id}`);
+      onUpdated();
+    } catch (err) {
+      setErro(err instanceof Error ? err.message : "Erro ao excluir");
+      setConfirmandoExclusao(false);
+    } finally {
+      setExcluindo(false);
+    }
+  }
+
   if (!editando) {
     return (
       <li className={`app-card ${className ?? ""}`}>
@@ -51,13 +67,37 @@ function ExercicioCard({
             <p className="font-medium text-neutral-900">{exercicio.nome}</p>
             <p className="text-sm text-neutral-500">{exercicio.grupoMuscular}</p>
           </div>
-          <button
-            onClick={() => setEditando(true)}
-            className="app-link-gold shrink-0 text-xs font-medium"
-          >
-            Editar
-          </button>
+          <div className="flex shrink-0 gap-3 text-xs font-medium">
+            <button onClick={() => setEditando(true)} className="app-link-gold">
+              Editar
+            </button>
+            {confirmandoExclusao ? (
+              <>
+                <button
+                  onClick={excluir}
+                  disabled={excluindo}
+                  className="text-red-600 hover:text-red-700 disabled:opacity-50"
+                >
+                  {excluindo ? "Excluindo..." : "Confirmar"}
+                </button>
+                <button
+                  onClick={() => setConfirmandoExclusao(false)}
+                  className="text-neutral-400 hover:text-neutral-600"
+                >
+                  Cancelar
+                </button>
+              </>
+            ) : (
+              <button
+                onClick={() => setConfirmandoExclusao(true)}
+                className="text-neutral-400 hover:text-red-600"
+              >
+                Excluir
+              </button>
+            )}
+          </div>
         </div>
+        {erro && <p className="mt-2 text-xs text-red-600">{erro}</p>}
       </li>
     );
   }
