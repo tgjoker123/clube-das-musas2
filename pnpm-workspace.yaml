@@ -2,10 +2,10 @@ packages:
   - "apps/*"
   - "packages/*"
 
-
 # Pacotes com scripts de instalação (postinstall/preinstall) — cada um
 # avaliado explicitamente por segurança (nunca "allow all").
 allowBuilds:
+  '@prisma/client': true
   # Baixa o binário do motor de query do Prisma — necessário para
   # `prisma generate`/`migrate` funcionarem.
   '@prisma/engines': true

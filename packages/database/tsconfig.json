@@ -1,9 +1,14 @@
 {
-  "extends": "@musas/config/typescript/base.json",
   "compilerOptions": {
-    "baseUrl": ".",
+    "target": "ES2022",
+    "module": "NodeNext",
+    "moduleResolution": "NodeNext",
+    "strict": true,
+    "esModuleInterop": true,
+    "skipLibCheck": true,
+    "declaration": true,
+    "outDir": "dist",
     "rootDir": "src"
   },
-  "include": ["src"],
-  "exclude": ["node_modules", "dist", "src/generated"]
+  "include": ["src"]
 }

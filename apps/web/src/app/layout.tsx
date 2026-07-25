@@ -1,35 +1,27 @@
 import type { Metadata } from "next";
-import { Inter, Playfair_Display } from "next/font/google";
-import { ThemeProvider } from "@musas/ui";
+import { Playfair_Display, Inter } from "next/font/google";
 import "./globals.css";
 
-const sans = Inter({
-  subsets: ["latin"],
-  variable: "--font-inter",
-  display: "swap",
-});
-
-const display = Playfair_Display({
+const playfair = Playfair_Display({
   subsets: ["latin"],
   variable: "--font-playfair",
-  display: "swap",
+  weight: ["500", "600", "700"],
+});
+
+const inter = Inter({
+  subsets: ["latin"],
+  variable: "--font-inter",
 });
 
 export const metadata: Metadata = {
   title: "Clube das Musas",
-  description: "Plataforma premium de acompanhamento de alunas, gamificação e evolução física.",
+  description: "Plataforma de gamificação para personal trainers e alunas",
 };
 
-export default function RootLayout({
-  children,
-}: Readonly<{
-  children: React.ReactNode;
-}>) {
+export default function RootLayout({ children }: { children: React.ReactNode }) {
   return (
-    <html lang="pt-BR" suppressHydrationWarning className={`${sans.variable} ${display.variable}`}>
-      <body>
-        <ThemeProvider>{children}</ThemeProvider>
-      </body>
+    <html lang="pt-BR" className={`${playfair.variable} ${inter.variable}`}>
+      <body className="min-h-screen bg-neutral-50 text-neutral-900">{children}</body>
     </html>
   );
 }

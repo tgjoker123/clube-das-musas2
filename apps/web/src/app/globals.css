@@ -1,9 +1,313 @@
-@import "@musas/ui/styles/tokens.css";
+@import "tailwindcss";
 
-/* Otimização de carregamento de fonte via next/font (ver layout.tsx) —
-   mantém os mesmos nomes de token definidos em packages/ui, apenas
-   substitui o valor por fontes pré-carregadas e otimizadas. */
+@theme {
+  --color-gold: #c9a227;
+  --color-gold-light: #e8cd75;
+  --color-gold-dark: #8a6d1a;
+  --color-ink: #0a0a0a;
+  --color-charcoal: #161513;
+
+  --font-serif: var(--font-playfair), "Playfair Display", serif;
+  --font-sans: var(--font-inter), system-ui, sans-serif;
+}
+
 :root {
-  --font-sans: var(--font-inter), "Inter", sans-serif;
-  --font-display: var(--font-playfair), "Playfair Display", serif;
+  --color-primary: var(--color-gold);
+  --color-primary-dark: var(--color-gold-dark);
+}
+
+html {
+  scroll-behavior: smooth;
+}
+
+body {
+  font-family: var(--font-sans);
+}
+
+::selection {
+  background: rgba(201, 162, 39, 0.35);
+  color: inherit;
+}
+
+.font-brand {
+  font-family: var(--font-serif);
+  letter-spacing: 0.04em;
+}
+
+/* Superfície de marca: preto + dourado, usada em landing/login/cadastro */
+.brand-surface {
+  background:
+    radial-gradient(ellipse 60% 50% at 50% -10%, rgba(201, 162, 39, 0.16), transparent),
+    var(--color-ink);
+  color: #f5f1e6;
+}
+
+.gold-text {
+  background: linear-gradient(180deg, var(--color-gold-light), var(--color-gold) 60%, var(--color-gold-dark));
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
+}
+
+.gold-border {
+  border-color: rgba(201, 162, 39, 0.35);
+}
+
+.gold-button {
+  position: relative;
+  overflow: hidden;
+  background: linear-gradient(135deg, var(--color-gold-light), var(--color-gold) 55%, var(--color-gold-dark));
+  color: var(--color-ink);
+  transition: filter 0.25s ease, transform 0.25s ease, box-shadow 0.25s ease;
+}
+
+.gold-button::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(115deg, transparent 30%, rgba(255, 255, 255, 0.55) 48%, transparent 66%);
+  background-size: 250% 100%;
+  background-position: 150% 0;
+  transition: background-position 0.7s ease;
+  pointer-events: none;
+}
+
+.gold-button:hover::after {
+  background-position: -50% 0;
+}
+
+.gold-button:hover {
+  filter: brightness(1.08);
+  transform: translateY(-1px);
+  box-shadow: 0 8px 24px -8px rgba(201, 162, 39, 0.55);
+}
+
+.gold-outline-button {
+  border: 1px solid rgba(201, 162, 39, 0.5);
+  color: var(--color-gold-light);
+  transition: background-color 0.25s ease, border-color 0.25s ease, transform 0.25s ease;
+}
+
+.gold-outline-button:hover {
+  background-color: rgba(201, 162, 39, 0.1);
+  border-color: var(--color-gold);
+  transform: translateY(-1px);
+}
+
+.brand-card {
+  background: rgba(255, 255, 255, 0.03);
+  border: 1px solid rgba(201, 162, 39, 0.18);
+  backdrop-filter: blur(6px);
+}
+
+.brand-input {
+  background: rgba(255, 255, 255, 0.04);
+  border: 1px solid rgba(255, 255, 255, 0.12);
+  color: #f5f1e6;
+  transition: border-color 0.2s ease, background-color 0.2s ease;
+}
+
+.brand-input::placeholder {
+  color: rgba(245, 241, 230, 0.4);
+}
+
+.brand-input:focus {
+  outline: none;
+  border-color: var(--color-gold);
+  background: rgba(255, 255, 255, 0.06);
+}
+
+/* Superfícies da área logada (tema claro, dourado como destaque) */
+.app-card {
+  background: #fff;
+  border: 1px solid rgb(228 228 231);
+  border-radius: 1rem;
+  padding: 1.5rem;
+  box-shadow: 0 1px 2px rgba(0, 0, 0, 0.03);
+  transition: box-shadow 0.25s ease, transform 0.25s ease;
+}
+
+.app-card:hover {
+  box-shadow: 0 12px 28px -12px rgba(0, 0, 0, 0.12);
+}
+
+.app-h2 {
+  font-family: var(--font-serif);
+  letter-spacing: 0.02em;
+  font-size: 1.125rem;
+  color: rgb(23 23 23);
+}
+
+.app-input {
+  width: 100%;
+  border-radius: 0.6rem;
+  border: 1px solid rgb(212 212 216);
+  padding: 0.6rem 0.9rem;
+  font-size: 0.875rem;
+  background: #fff;
+  transition: border-color 0.2s ease, box-shadow 0.2s ease;
+}
+
+.app-input:focus {
+  outline: none;
+  border-color: var(--color-gold);
+  box-shadow: 0 0 0 3px rgba(201, 162, 39, 0.15);
+}
+
+.app-link-gold {
+  color: var(--color-gold-dark);
+  transition: color 0.2s ease;
+}
+
+.app-link-gold:hover {
+  color: var(--color-gold);
+  text-decoration: underline;
+}
+
+/* Animações */
+@keyframes fade-in-up {
+  from {
+    opacity: 0;
+    transform: translateY(14px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes fade-in {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+
+@keyframes shimmer {
+  0% {
+    background-position: -200% 0;
+  }
+  100% {
+    background-position: 200% 0;
+  }
+}
+
+@keyframes float-glow {
+  0%,
+  100% {
+    filter: drop-shadow(0 0 12px rgba(201, 162, 39, 0.35));
+    transform: translateY(0);
+  }
+  50% {
+    filter: drop-shadow(0 0 22px rgba(201, 162, 39, 0.55));
+    transform: translateY(-4px);
+  }
+}
+
+.animate-fade-in-up {
+  animation: fade-in-up 0.7s cubic-bezier(0.16, 1, 0.3, 1) both;
+}
+
+.animate-fade-in {
+  animation: fade-in 0.6s ease both;
+}
+
+.animate-float-glow {
+  animation: float-glow 4.5s ease-in-out infinite;
+}
+
+.shimmer-text {
+  background: linear-gradient(
+    100deg,
+    var(--color-gold-dark) 30%,
+    var(--color-gold-light) 45%,
+    var(--color-gold-light) 55%,
+    var(--color-gold-dark) 70%
+  );
+  background-size: 200% 100%;
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
+  animation: shimmer 3.5s linear infinite;
+}
+
+.stagger-1 {
+  animation-delay: 0.1s;
+}
+.stagger-2 {
+  animation-delay: 0.22s;
+}
+.stagger-3 {
+  animation-delay: 0.34s;
+}
+.stagger-4 {
+  animation-delay: 0.46s;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .animate-fade-in-up,
+  .animate-fade-in,
+  .animate-float-glow,
+  .shimmer-text {
+    animation: none !important;
+  }
+}
+
+/* Celebração de check-in */
+@keyframes confetti-fall {
+  0% {
+    transform: translateY(-10vh) translateX(0) rotate(0deg);
+    opacity: 1;
+  }
+  100% {
+    transform: translateY(100vh) translateX(var(--drift, 0px)) rotate(540deg);
+    opacity: 0;
+  }
+}
+
+@keyframes celebration-pop {
+  0% {
+    opacity: 0;
+    transform: scale(0.85) translateY(8px);
+  }
+  60% {
+    opacity: 1;
+    transform: scale(1.03) translateY(0);
+  }
+  100% {
+    opacity: 1;
+    transform: scale(1) translateY(0);
+  }
+}
+
+@keyframes celebration-fade-out {
+  to {
+    opacity: 0;
+  }
+}
+
+.confetti-piece {
+  position: fixed;
+  top: -10px;
+  will-change: transform, opacity;
+  animation: confetti-fall linear forwards;
+  pointer-events: none;
+}
+
+.celebration-card {
+  animation: celebration-pop 0.45s cubic-bezier(0.16, 1, 0.3, 1) both;
+}
+
+.celebration-overlay {
+  animation: celebration-fade-out 0.4s ease forwards;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .confetti-piece,
+  .celebration-card,
+  .celebration-overlay {
+    animation: none !important;
+  }
 }

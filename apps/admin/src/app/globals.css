@@ -1,9 +1,0 @@
-@import "@musas/ui/styles/tokens.css";
-
-/* Otimização de carregamento de fonte via next/font (ver layout.tsx) —
-   mantém os mesmos nomes de token definidos em packages/ui, apenas
-   substitui o valor por fontes pré-carregadas e otimizadas. */
-:root {
-  --font-sans: var(--font-inter), "Inter", sans-serif;
-  --font-display: var(--font-playfair), "Playfair Display", serif;
-}

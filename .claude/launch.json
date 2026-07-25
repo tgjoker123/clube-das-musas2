@@ -4,19 +4,13 @@
     {
       "name": "web",
       "runtimeExecutable": "pnpm",
-      "runtimeArgs": ["--filter", "@musas/web", "run", "dev"],
-      "port": 3000
-    },
-    {
-      "name": "admin",
-      "runtimeExecutable": "pnpm",
-      "runtimeArgs": ["--filter", "@musas/admin", "run", "dev"],
+      "runtimeArgs": ["--filter", "web", "run", "dev"],
       "port": 3000
     },
     {
       "name": "api",
       "runtimeExecutable": "pnpm",
-      "runtimeArgs": ["--filter", "@musas/api", "run", "dev"],
+      "runtimeArgs": ["--filter", "@musas/api", "run", "start:dev"],
       "port": 3001
     }
   ]
