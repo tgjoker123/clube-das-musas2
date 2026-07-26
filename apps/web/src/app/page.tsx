@@ -55,9 +55,11 @@ export default function HomePage() {
           Musas
         </h1>
         <p className="animate-fade-in-up stagger-2 mt-5 max-w-lg text-sm text-white/60 sm:mt-6 sm:text-base">
-          A plataforma de treino e acompanhamento para personal trainers elevarem a
-          experiência de suas alunas — com gamificação, evolução real e um toque de
-          exclusividade.
+          O Clube das Musas reúne mulheres com um propósito em comum: cuidar do corpo,
+          elevar a autoestima e evoluir de verdade, sem abrir mão de leveza e conexão.
+          Aqui você treina acompanhada, comemora cada progresso e faz parte de uma
+          comunidade que entende que saúde e corpo bonito andam junto com motivação e
+          apoio de verdade.
         </p>
 
         <div className="animate-fade-in-up stagger-3 mt-8 flex w-full flex-col gap-3 sm:mt-10 sm:w-auto sm:flex-row sm:gap-4">
