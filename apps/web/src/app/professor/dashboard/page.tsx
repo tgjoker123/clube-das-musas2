@@ -69,17 +69,17 @@ export default function ProfessorDashboardPage() {
   ];
 
   return (
-    <div className="space-y-10">
-      <h1 className="font-brand text-3xl font-semibold text-neutral-900">Dashboard</h1>
+    <div className="space-y-8 sm:space-y-10">
+      <h1 className="font-brand text-2xl font-semibold text-neutral-900 sm:text-3xl">Dashboard</h1>
 
-      <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-4">
+      <div className="grid grid-cols-2 gap-3 sm:gap-4 lg:grid-cols-4">
         {cards.map((card, i) => (
           <div
             key={card.label}
-            className={`animate-fade-in-up stagger-${i + 1} rounded-2xl border border-neutral-200 bg-white p-6 shadow-sm transition-shadow hover:shadow-md`}
+            className={`animate-fade-in-up stagger-${i + 1} rounded-2xl border border-neutral-200 bg-white p-4 shadow-sm transition-shadow hover:shadow-md sm:p-6`}
           >
-            <p className="text-sm text-neutral-500">{card.label}</p>
-            <p className="mt-1 font-brand text-3xl font-semibold text-[color:var(--color-gold-dark)]">
+            <p className="text-xs text-neutral-500 sm:text-sm">{card.label}</p>
+            <p className="mt-1 font-brand text-xl font-semibold text-[color:var(--color-gold-dark)] sm:text-3xl">
               {card.valor}
             </p>
           </div>

@@ -75,7 +75,7 @@ function LeadCard({
           <button
             onClick={handleRemove}
             disabled={removendo}
-            className="shrink-0 text-xs text-neutral-400 hover:text-red-600 disabled:opacity-50"
+            className="-m-2 shrink-0 p-2 text-xs text-neutral-400 hover:text-red-600 disabled:opacity-50"
           >
             {removendo ? "Removendo..." : "Remover"}
           </button>
@@ -103,7 +103,7 @@ function LeadCard({
           <button
             type="button"
             onClick={() => setCadastrando(false)}
-            className="text-xs text-neutral-500 hover:text-neutral-700"
+            className="-m-2 p-2 text-xs text-neutral-500 hover:text-neutral-700"
           >
             Cancelar
           </button>
@@ -111,7 +111,7 @@ function LeadCard({
       ) : (
         <button
           onClick={() => setCadastrando(true)}
-          className="app-link-gold mt-3 text-xs font-medium"
+          className="app-link-gold -m-2 mt-3 p-2 text-xs font-medium"
         >
           Cadastrar como aluna
         </button>

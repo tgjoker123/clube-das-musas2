@@ -111,7 +111,7 @@ export default function FichaDetalhePage({ params }: { params: Promise<{ id: str
               </span>
               <button
                 onClick={() => handleRemoveItem(item.id)}
-                className="shrink-0 text-xs text-neutral-400 hover:text-red-600"
+                className="-m-2 shrink-0 p-2 text-xs text-neutral-400 hover:text-red-600"
               >
                 Remover
               </button>

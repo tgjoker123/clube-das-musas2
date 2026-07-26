@@ -166,11 +166,11 @@ export default function AlunasPage() {
                   {a.authUserId ? "Ativo" : "Pendente"}
                 </td>
                 <td className="px-4 py-3">
-                  <div className="flex items-center justify-end gap-3 text-xs font-medium">
+                  <div className="flex items-center justify-end gap-2 text-xs font-medium">
                     {!a.authUserId && (
                       <button
                         onClick={() => handleInvite(a.id)}
-                        className="app-link-gold"
+                        className="app-link-gold p-1.5"
                       >
                         Enviar convite
                       </button>
@@ -181,13 +181,13 @@ export default function AlunasPage() {
                         <button
                           onClick={() => handleDelete(a.id)}
                           disabled={excluindoId === a.id}
-                          className="text-red-600 hover:text-red-700 disabled:opacity-50"
+                          className="p-1.5 text-red-600 hover:text-red-700 disabled:opacity-50"
                         >
                           {excluindoId === a.id ? "Excluindo..." : "Sim, excluir"}
                         </button>
                         <button
                           onClick={() => setConfirmandoId(null)}
-                          className="text-neutral-400 hover:text-neutral-600"
+                          className="p-1.5 text-neutral-400 hover:text-neutral-600"
                         >
                           Cancelar
                         </button>
@@ -195,7 +195,7 @@ export default function AlunasPage() {
                     ) : (
                       <button
                         onClick={() => setConfirmandoId(a.id)}
-                        className="text-neutral-400 hover:text-red-600"
+                        className="p-1.5 text-neutral-400 hover:text-red-600"
                       >
                         Excluir
                       </button>

@@ -67,8 +67,8 @@ function ExercicioCard({
             <p className="font-medium text-neutral-900">{exercicio.nome}</p>
             <p className="text-sm text-neutral-500">{exercicio.grupoMuscular}</p>
           </div>
-          <div className="flex shrink-0 gap-3 text-xs font-medium">
-            <button onClick={() => setEditando(true)} className="app-link-gold">
+          <div className="flex shrink-0 gap-1 text-xs font-medium">
+            <button onClick={() => setEditando(true)} className="app-link-gold -m-2 p-2">
               Editar
             </button>
             {confirmandoExclusao ? (
@@ -76,13 +76,13 @@ function ExercicioCard({
                 <button
                   onClick={excluir}
                   disabled={excluindo}
-                  className="text-red-600 hover:text-red-700 disabled:opacity-50"
+                  className="-m-2 p-2 text-red-600 hover:text-red-700 disabled:opacity-50"
                 >
                   {excluindo ? "Excluindo..." : "Confirmar"}
                 </button>
                 <button
                   onClick={() => setConfirmandoExclusao(false)}
-                  className="text-neutral-400 hover:text-neutral-600"
+                  className="-m-2 p-2 text-neutral-400 hover:text-neutral-600"
                 >
                   Cancelar
                 </button>
@@ -90,7 +90,7 @@ function ExercicioCard({
             ) : (
               <button
                 onClick={() => setConfirmandoExclusao(true)}
-                className="text-neutral-400 hover:text-red-600"
+                className="-m-2 p-2 text-neutral-400 hover:text-red-600"
               >
                 Excluir
               </button>

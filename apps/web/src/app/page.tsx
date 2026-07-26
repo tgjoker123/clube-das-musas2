@@ -29,7 +29,7 @@ const RECURSOS = [
 
 export default function HomePage() {
   return (
-    <main className="brand-surface relative flex min-h-screen flex-col items-center overflow-hidden px-6 py-24">
+    <main className="brand-surface relative flex min-h-screen flex-col items-center overflow-hidden px-5 py-16 sm:px-6 sm:py-24">
       <div
         className="pointer-events-none absolute inset-0 opacity-40"
         style={{
@@ -51,34 +51,34 @@ export default function HomePage() {
         <p className="animate-fade-in-up mt-6 font-brand text-xs tracking-[0.4em] text-[color:var(--color-gold-light)] uppercase">
           Clube das
         </p>
-        <h1 className="animate-fade-in-up stagger-1 font-brand shimmer-text text-6xl font-semibold sm:text-8xl">
+        <h1 className="animate-fade-in-up stagger-1 font-brand shimmer-text text-5xl font-semibold sm:text-8xl">
           Musas
         </h1>
-        <p className="animate-fade-in-up stagger-2 mt-6 max-w-lg text-sm text-white/60 sm:text-base">
+        <p className="animate-fade-in-up stagger-2 mt-5 max-w-lg text-sm text-white/60 sm:mt-6 sm:text-base">
           A plataforma de treino e acompanhamento para personal trainers elevarem a
           experiência de suas alunas — com gamificação, evolução real e um toque de
           exclusividade.
         </p>
 
-        <div className="animate-fade-in-up stagger-3 mt-10 flex flex-col gap-4 sm:flex-row">
+        <div className="animate-fade-in-up stagger-3 mt-8 flex w-full flex-col gap-3 sm:mt-10 sm:w-auto sm:flex-row sm:gap-4">
           <Link
             href="/login"
-            className="gold-button rounded-full px-8 py-3 text-sm font-medium tracking-wide"
+            className="gold-button rounded-full px-8 py-3 text-center text-sm font-medium tracking-wide"
           >
             Entrar
           </Link>
           <Link
             href="/quero-fazer-parte"
-            className="gold-outline-button rounded-full px-8 py-3 text-sm font-medium tracking-wide"
+            className="gold-outline-button rounded-full px-8 py-3 text-center text-sm font-medium tracking-wide"
           >
             Quero fazer parte
           </Link>
         </div>
       </div>
 
-      <div className="relative z-10 mt-24 h-px w-full max-w-4xl bg-gradient-to-r from-transparent via-[color:var(--color-gold)]/40 to-transparent" />
+      <div className="relative z-10 mt-16 h-px w-full max-w-4xl bg-gradient-to-r from-transparent via-[color:var(--color-gold)]/40 to-transparent sm:mt-24" />
 
-      <div className="relative z-10 mt-16 grid w-full max-w-4xl gap-4 sm:grid-cols-3">
+      <div className="relative z-10 mt-10 grid w-full max-w-4xl gap-4 sm:mt-16 sm:grid-cols-3">
         {RECURSOS.map((recurso, i) => (
           <div
             key={recurso.titulo}
