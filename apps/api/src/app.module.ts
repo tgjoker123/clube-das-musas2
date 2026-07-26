@@ -1,4 +1,5 @@
 import { Module } from "@nestjs/common";
+import { AppController } from "./app.controller";
 import { DatabaseModule } from "./core/database/database.module";
 import { SupabaseModule } from "./core/supabase/supabase.module";
 import { StorageModule } from "./core/storage/storage.module";
@@ -17,6 +18,7 @@ import { RecordesModule } from "./modules/recordes/recordes.module";
 import { RecadosModule } from "./modules/recados/recados.module";
 
 @Module({
+  controllers: [AppController],
   imports: [
     DatabaseModule,
     SupabaseModule,
