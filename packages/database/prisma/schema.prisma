@@ -44,6 +44,7 @@ model Professor {
   exercicios  Exercicio[]
   fichas      FichaTreino[]
   desafios    Desafio[]
+  recados     Recado[]
 
   @@map("professores")
 }
@@ -67,6 +68,10 @@ model Aluna {
   fichas         FichaAluna[]
   checkIns       CheckIn[]
   avaliacoesTreino AvaliacaoTreino[]
+  curtidas       CheckInCurtida[]
+  comentarios    CheckInComentario[]
+  recordes       RecordePessoal[]
+  recados        Recado[]
 
   @@index([professorId])
   @@map("alunas")
@@ -121,6 +126,7 @@ model Exercicio {
   professor       Professor         @relation(fields: [professorId], references: [id], onDelete: Cascade)
   itensFicha      FichaTreinoItem[]
   checkIns        CheckIn[]
+  recordes        RecordePessoal[]
 
   @@index([professorId])
   @@map("exercicios")
@@ -175,14 +181,78 @@ model CheckIn {
   exercicioId String
   data        DateTime      @default(now())
   fotoUrl     String?
+  descricao   String?
+  cargaUsada  Decimal?
+  repsUsadas  Int?
   status      StatusCheckIn @default(pendente)
 
-  aluna     Aluna     @relation(fields: [alunaId], references: [id], onDelete: Cascade)
-  exercicio Exercicio @relation(fields: [exercicioId], references: [id], onDelete: Cascade)
+  aluna      Aluna              @relation(fields: [alunaId], references: [id], onDelete: Cascade)
+  exercicio  Exercicio          @relation(fields: [exercicioId], references: [id], onDelete: Cascade)
+  curtidas   CheckInCurtida[]
+  comentarios CheckInComentario[]
 
   @@index([alunaId])
   @@index([exercicioId])
   @@map("check_ins")
+}
+
+model CheckInCurtida {
+  id        String   @id @default(uuid())
+  checkInId String
+  alunaId   String
+  createdAt DateTime @default(now())
+
+  checkIn CheckIn @relation(fields: [checkInId], references: [id], onDelete: Cascade)
+  aluna   Aluna   @relation(fields: [alunaId], references: [id], onDelete: Cascade)
+
+  @@unique([checkInId, alunaId])
+  @@index([checkInId])
+  @@map("check_in_curtidas")
+}
+
+model CheckInComentario {
+  id        String   @id @default(uuid())
+  checkInId String
+  alunaId   String
+  texto     String
+  createdAt DateTime @default(now())
+
+  checkIn CheckIn @relation(fields: [checkInId], references: [id], onDelete: Cascade)
+  aluna   Aluna   @relation(fields: [alunaId], references: [id], onDelete: Cascade)
+
+  @@index([checkInId])
+  @@map("check_in_comentarios")
+}
+
+model RecordePessoal {
+  id          String   @id @default(uuid())
+  alunaId     String
+  exercicioId String
+  carga       Decimal
+  reps        Int
+  data        DateTime @default(now())
+
+  aluna     Aluna     @relation(fields: [alunaId], references: [id], onDelete: Cascade)
+  exercicio Exercicio @relation(fields: [exercicioId], references: [id], onDelete: Cascade)
+
+  @@index([alunaId, exercicioId])
+  @@map("recordes_pessoais")
+}
+
+model Recado {
+  id          String   @id @default(uuid())
+  professorId String
+  alunaId     String?
+  titulo      String
+  mensagem    String
+  createdAt   DateTime @default(now())
+
+  professor Professor @relation(fields: [professorId], references: [id], onDelete: Cascade)
+  aluna     Aluna?    @relation(fields: [alunaId], references: [id], onDelete: Cascade)
+
+  @@index([professorId])
+  @@index([alunaId])
+  @@map("recados")
 }
 
 model AvaliacaoTreino {
@@ -202,6 +272,7 @@ model Desafio {
   id          String   @id @default(uuid())
   professorId String
   titulo      String
+  metrica     String   @default("treinos")
   dataInicio  DateTime
   dataFim     DateTime
   createdAt   DateTime @default(now())

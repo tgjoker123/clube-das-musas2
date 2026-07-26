@@ -13,6 +13,8 @@ import { LeadsModule } from "./modules/leads/leads.module";
 import { AdminModule } from "./modules/admin/admin.module";
 import { AvaliacoesModule } from "./modules/avaliacoes/avaliacoes.module";
 import { DesafiosModule } from "./modules/desafios/desafios.module";
+import { RecordesModule } from "./modules/recordes/recordes.module";
+import { RecadosModule } from "./modules/recados/recados.module";
 
 @Module({
   imports: [
@@ -30,6 +32,8 @@ import { DesafiosModule } from "./modules/desafios/desafios.module";
     AdminModule,
     AvaliacoesModule,
     DesafiosModule,
+    RecordesModule,
+    RecadosModule,
   ],
 })
 export class AppModule {}

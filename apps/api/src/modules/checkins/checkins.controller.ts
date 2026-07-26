@@ -6,6 +6,7 @@ import { CurrentUser } from "../../core/auth/current-user.decorator";
 import type { CurrentUser as CurrentUserType } from "../../core/auth/current-user";
 import { CheckinsService } from "./checkins.service";
 import { CompleteCheckInDto } from "./dto/complete-checkin.dto";
+import { CreateComentarioDto } from "./dto/create-comentario.dto";
 
 @Controller("checkins")
 @UseGuards(SupabaseAuthGuard, RolesGuard)
@@ -22,6 +23,28 @@ export class CheckinsController {
   @Roles("aluna")
   listMine(@CurrentUser() user: CurrentUserType) {
     return this.checkinsService.listForAluna(user.alunaId!);
+  }
+
+  @Get("feed")
+  @Roles("aluna")
+  getFeed(@CurrentUser() user: CurrentUserType) {
+    return this.checkinsService.getFeed(user.alunaId!);
+  }
+
+  @Post(":id/curtir")
+  @Roles("aluna")
+  curtir(@CurrentUser() user: CurrentUserType, @Param("id") id: string) {
+    return this.checkinsService.toggleCurtida(user.alunaId!, id);
+  }
+
+  @Post(":id/comentarios")
+  @Roles("aluna")
+  comentar(
+    @CurrentUser() user: CurrentUserType,
+    @Param("id") id: string,
+    @Body() dto: CreateComentarioDto,
+  ) {
+    return this.checkinsService.comentar(user.alunaId!, id, dto);
   }
 
   @Get("aluna/:alunaId")

@@ -7,6 +7,8 @@ import { BrandMark } from "@/components/brand-mark";
 
 const LINKS = [
   { href: "/aluna/treino", label: "Treino" },
+  { href: "/aluna/feed", label: "Feed" },
+  { href: "/aluna/recordes", label: "Recordes" },
   { href: "/aluna/historico", label: "Meu histórico" },
   { href: "/aluna/perfil", label: "Meu perfil" },
 ];

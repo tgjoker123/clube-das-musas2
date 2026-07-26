@@ -5,7 +5,8 @@ import { api } from "@/lib/api";
 import { Celebration } from "@/components/celebration";
 import { RestTimer } from "@/components/rest-timer";
 import { AvaliacaoTreino } from "@/components/avaliacao-treino";
-import { DesafioAtual } from "@/components/desafio-atual";
+import { DesafiosAtivos } from "@/components/desafio-atual";
+import { Mural } from "@/components/mural";
 
 interface Exercicio {
   id: string;
@@ -82,6 +83,16 @@ export default function TreinoPage() {
   const [erro, setErro] = useState<string | null>(null);
   const [enviando, setEnviando] = useState<string | null>(null);
   const [celebracao, setCelebracao] = useState<{ message: string; streak: number } | null>(null);
+  const [entradas, setEntradas] = useState<
+    Record<string, { carga: string; reps: string; descricao: string }>
+  >({});
+
+  function atualizarEntrada(exercicioId: string, campo: "carga" | "reps" | "descricao", valor: string) {
+    setEntradas((prev) => {
+      const atual = prev[exercicioId] ?? { carga: "", reps: "", descricao: "" };
+      return { ...prev, [exercicioId]: { ...atual, [campo]: valor } };
+    });
+  }
 
   function carregar() {
     api.get<Ficha[]>("/workouts/aluna/me").then(setFichas);
@@ -102,12 +113,21 @@ export default function TreinoPage() {
     setEnviando(exercicioId);
     setErro(null);
     try {
-      await api.post("/checkins", { exercicioId });
+      const entrada = entradas[exercicioId];
+      const { novoRecorde } = await api.post<{ novoRecorde: boolean }>("/checkins", {
+        exercicioId,
+        cargaUsada: entrada?.carga ? Number(entrada.carga) : undefined,
+        repsUsadas: entrada?.reps ? Number(entrada.reps) : undefined,
+        descricao: entrada?.descricao || undefined,
+      });
       const checkInsAtualizados = await api.get<CheckIn[]>("/checkins/me");
       setCheckIns(checkInsAtualizados);
       const mensagem =
         MENSAGENS_MOTIVACIONAIS[Math.floor(Math.random() * MENSAGENS_MOTIVACIONAIS.length)]!;
-      setCelebracao({ message: mensagem, streak: calcularStreak(checkInsAtualizados) });
+      setCelebracao({
+        message: novoRecorde ? `🏆 Novo recorde! ${mensagem}` : mensagem,
+        streak: calcularStreak(checkInsAtualizados),
+      });
     } catch (err) {
       setErro(err instanceof Error ? err.message : "Erro ao concluir exercício");
     } finally {
@@ -138,7 +158,9 @@ export default function TreinoPage() {
 
       {erro && <p className="text-red-600">{erro}</p>}
 
-      <DesafioAtual />
+      <Mural />
+
+      <DesafiosAtivos />
 
       <RestTimer />
 
@@ -183,19 +205,44 @@ export default function TreinoPage() {
                     <p className="mt-1 text-sm text-neutral-600">{item.exercicio.instrucoes}</p>
                   )}
 
-                  <div className="mt-3">
+                  <div className="mt-3 space-y-2">
                     {concluido ? (
                       <span className="text-sm font-medium text-emerald-600">
                         Concluído hoje ✓
                       </span>
                     ) : (
-                      <button
-                        onClick={() => handleConcluir(item.exercicio.id)}
-                        disabled={enviando === item.exercicio.id}
-                        className="gold-button rounded-full px-4 py-2 text-sm font-medium disabled:opacity-50"
-                      >
-                        {enviando === item.exercicio.id ? "Concluindo..." : "Concluir exercício"}
-                      </button>
+                      <>
+                        <div className="flex gap-2">
+                          <input
+                            type="number"
+                            placeholder="Carga (kg)"
+                            value={entradas[item.exercicio.id]?.carga ?? ""}
+                            onChange={(e) => atualizarEntrada(item.exercicio.id, "carga", e.target.value)}
+                            className="app-input w-28 text-sm"
+                          />
+                          <input
+                            type="number"
+                            placeholder="Reps"
+                            value={entradas[item.exercicio.id]?.reps ?? ""}
+                            onChange={(e) => atualizarEntrada(item.exercicio.id, "reps", e.target.value)}
+                            className="app-input w-24 text-sm"
+                          />
+                        </div>
+                        <input
+                          type="text"
+                          placeholder="Como foi? (opcional)"
+                          value={entradas[item.exercicio.id]?.descricao ?? ""}
+                          onChange={(e) => atualizarEntrada(item.exercicio.id, "descricao", e.target.value)}
+                          className="app-input w-full text-sm"
+                        />
+                        <button
+                          onClick={() => handleConcluir(item.exercicio.id)}
+                          disabled={enviando === item.exercicio.id}
+                          className="gold-button rounded-full px-4 py-2 text-sm font-medium disabled:opacity-50"
+                        >
+                          {enviando === item.exercicio.id ? "Concluindo..." : "Concluir exercício"}
+                        </button>
+                      </>
                     )}
                   </div>
                 </li>

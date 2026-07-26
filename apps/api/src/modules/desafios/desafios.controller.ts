@@ -24,10 +24,10 @@ export class DesafiosController {
     return this.desafiosService.list(user.professorId!);
   }
 
-  @Get("atual")
+  @Get("ativos")
   @Roles("aluna")
-  getAtual(@CurrentUser() user: CurrentUserType) {
-    return this.desafiosService.getAtualParaAluna(user.alunaId!);
+  getAtivos(@CurrentUser() user: CurrentUserType) {
+    return this.desafiosService.getAtivosParaAluna(user.alunaId!);
   }
 
   @Get(":id/ranking")

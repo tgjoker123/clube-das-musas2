@@ -6,6 +6,7 @@ import { api } from "@/lib/api";
 interface Desafio {
   id: string;
   titulo: string;
+  metrica: string;
   dataInicio: string;
   dataFim: string;
 }
@@ -16,16 +17,30 @@ interface RankingItem {
   pontos: number;
 }
 
+const METRICAS = [
+  { valor: "treinos", label: "Treinos concluídos" },
+  { valor: "streak", label: "Dias distintos treinados" },
+  { valor: "avaliacao", label: "Nota média da avaliação" },
+];
+
+function labelMetrica(valor: string): string {
+  return METRICAS.find((m) => m.valor === valor)?.label ?? valor;
+}
+
 function DesafioCard({ desafio }: { desafio: Desafio }) {
   const [aberto, setAberto] = useState(false);
   const [ranking, setRanking] = useState<RankingItem[] | null>(null);
+  const [unidade, setUnidade] = useState("pontos");
   const [erro, setErro] = useState<string | null>(null);
 
   async function toggle() {
     if (!aberto && !ranking) {
       try {
-        const res = await api.get<{ ranking: RankingItem[] }>(`/desafios/${desafio.id}/ranking`);
+        const res = await api.get<{ ranking: RankingItem[]; unidade: string }>(
+          `/desafios/${desafio.id}/ranking`,
+        );
         setRanking(res.ranking);
+        setUnidade(res.unidade);
       } catch (err) {
         setErro(err instanceof Error ? err.message : "Erro ao carregar ranking");
       }
@@ -41,6 +56,7 @@ function DesafioCard({ desafio }: { desafio: Desafio }) {
       <div className="flex items-center justify-between gap-2">
         <div>
           <p className="font-medium text-neutral-900">{desafio.titulo}</p>
+          <p className="text-xs text-neutral-400">{labelMetrica(desafio.metrica)}</p>
           <p className="text-sm text-neutral-500">
             {new Date(desafio.dataInicio).toLocaleDateString("pt-BR")} —{" "}
             {new Date(desafio.dataFim).toLocaleDateString("pt-BR")}
@@ -68,7 +84,9 @@ function DesafioCard({ desafio }: { desafio: Desafio }) {
                 <span className="text-neutral-700">
                   {i + 1}º {r.nome}
                 </span>
-                <span className="font-medium text-neutral-500">{r.pontos} treinos</span>
+                <span className="font-medium text-neutral-500">
+                  {r.pontos} {unidade}
+                </span>
               </li>
             ))
           )}
@@ -82,6 +100,7 @@ export default function DesafiosPage() {
   const [desafios, setDesafios] = useState<Desafio[]>([]);
   const [erro, setErro] = useState<string | null>(null);
   const [titulo, setTitulo] = useState("");
+  const [metrica, setMetrica] = useState("treinos");
   const [dataInicio, setDataInicio] = useState("");
   const [dataFim, setDataFim] = useState("");
   const [salvando, setSalvando] = useState(false);
@@ -100,7 +119,7 @@ export default function DesafiosPage() {
     setSalvando(true);
     setErro(null);
     try {
-      await api.post("/desafios", { titulo, dataInicio, dataFim });
+      await api.post("/desafios", { titulo, metrica, dataInicio, dataFim });
       setTitulo("");
       setDataInicio("");
       setDataFim("");
@@ -117,7 +136,7 @@ export default function DesafiosPage() {
       <div>
         <h1 className="font-brand text-3xl font-semibold text-neutral-900">Desafios</h1>
         <p className="text-sm text-neutral-500">
-          Crie um desafio e acompanhe o ranking de quem mais treinou no período.
+          Crie quantos desafios quiser, com métricas diferentes, e acompanhe o ranking de cada um.
         </p>
       </div>
 
@@ -130,6 +149,20 @@ export default function DesafiosPage() {
           onChange={(e) => setTitulo(e.target.value)}
           className="app-input"
         />
+        <label className="block text-xs text-neutral-500">
+          Métrica de ranking
+          <select
+            value={metrica}
+            onChange={(e) => setMetrica(e.target.value)}
+            className="app-input mt-1"
+          >
+            {METRICAS.map((m) => (
+              <option key={m.valor} value={m.valor}>
+                {m.label}
+              </option>
+            ))}
+          </select>
+        </label>
         <div className="flex gap-2">
           <label className="flex-1 text-xs text-neutral-500">
             Início
