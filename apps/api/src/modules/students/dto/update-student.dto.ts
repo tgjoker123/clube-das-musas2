@@ -18,4 +18,8 @@ export class UpdateStudentDto {
   @IsOptional()
   @IsString()
   observacoes?: string;
+
+  @IsOptional()
+  @IsString()
+  fotoUrl?: string;
 }

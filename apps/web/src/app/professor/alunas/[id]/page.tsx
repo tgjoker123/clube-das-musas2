@@ -1,7 +1,7 @@
 "use client";
 
 import { use, useEffect, useState } from "react";
-import { api, uploadFile } from "@/lib/api";
+import { api, uploadFile, uploadAlunaFoto } from "@/lib/api";
 import { BackLink } from "@/components/back-link";
 
 interface Anamnese {
@@ -31,6 +31,7 @@ interface AlunaDetalhe {
   dataNascimento: string;
   status: "ativa" | "suspensa" | "inadimplente";
   observacoes: string | null;
+  fotoUrl: string | null;
   anamneses: Anamnese[];
   exames: Exame[];
   evolucoes: Evolucao[];
@@ -51,6 +52,7 @@ export default function AlunaDetalhePage({ params }: { params: Promise<{ id: str
   const [exameData, setExameData] = useState("");
   const [evolucaoPeso, setEvolucaoPeso] = useState("");
   const [evolucaoFoto, setEvolucaoFoto] = useState<File | null>(null);
+  const [enviandoFoto, setEnviandoFoto] = useState(false);
 
   function carregar() {
     api
@@ -101,6 +103,21 @@ export default function AlunaDetalhePage({ params }: { params: Promise<{ id: str
     }
   }
 
+  async function handleTrocarFoto(e: React.ChangeEvent<HTMLInputElement>) {
+    const file = e.target.files?.[0];
+    if (!file) return;
+    setEnviandoFoto(true);
+    try {
+      const fotoUrl = await uploadAlunaFoto(file);
+      await api.patch(`/students/${id}`, { fotoUrl });
+      carregar();
+    } catch (err) {
+      setErro(err instanceof Error ? err.message : "Erro ao enviar foto");
+    } finally {
+      setEnviandoFoto(false);
+    }
+  }
+
   async function salvarEvolucao(e: React.FormEvent) {
     e.preventDefault();
     try {
@@ -123,9 +140,40 @@ export default function AlunaDetalhePage({ params }: { params: Promise<{ id: str
   return (
     <div className="max-w-2xl space-y-8">
       <BackLink href="/professor/alunas" label="Voltar para alunas" />
-      <div>
-        <h1 className="font-brand text-3xl font-semibold text-neutral-900">{aluna.nome}</h1>
-        <p className="text-sm text-neutral-500">{aluna.email}</p>
+      <div className="flex items-center gap-4">
+        <label className="group relative cursor-pointer">
+          {aluna.fotoUrl ? (
+            // eslint-disable-next-line @next/next/no-img-element
+            <img
+              src={aluna.fotoUrl}
+              alt={aluna.nome}
+              className="h-16 w-16 rounded-full object-cover"
+            />
+          ) : (
+            <span className="flex h-16 w-16 items-center justify-center rounded-full bg-[color:var(--color-gold)]/15 text-lg font-medium text-[color:var(--color-gold-dark)]">
+              {aluna.nome
+                .split(" ")
+                .slice(0, 2)
+                .map((p) => p[0])
+                .join("")
+                .toUpperCase()}
+            </span>
+          )}
+          <span className="absolute inset-0 flex items-center justify-center rounded-full bg-black/50 text-[10px] text-white opacity-0 transition-opacity group-hover:opacity-100">
+            {enviandoFoto ? "..." : "Trocar"}
+          </span>
+          <input
+            type="file"
+            accept="image/*"
+            className="hidden"
+            disabled={enviandoFoto}
+            onChange={handleTrocarFoto}
+          />
+        </label>
+        <div>
+          <h1 className="font-brand text-3xl font-semibold text-neutral-900">{aluna.nome}</h1>
+          <p className="text-sm text-neutral-500">{aluna.email}</p>
+        </div>
       </div>
 
       <section className="app-card animate-fade-in-up stagger-1 space-y-3">

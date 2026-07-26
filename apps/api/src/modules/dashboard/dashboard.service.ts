@@ -33,6 +33,14 @@ export class DashboardService {
       .filter(({ dias }) => dias <= 30)
       .sort((a, b) => a.dias - b.dias);
 
+    const aniversariantesDoMes = ativas
+      .filter((a) => a.dataNascimento.getMonth() === hoje.getMonth())
+      .sort((a, b) => a.dataNascimento.getDate() - b.dataNascimento.getDate());
+
+    const aniversariantesPorMes = Array.from({ length: 12 }, (_, mes) =>
+      ativas.filter((a) => a.dataNascimento.getMonth() === mes).length,
+    );
+
     const seteDiasEmMs = 7 * 24 * 60 * 60 * 1000;
     const semTreinoHa7Dias = ativas.filter((a) => {
       const ultimoCheckIn = a.checkIns[0];
@@ -57,6 +65,8 @@ export class DashboardService {
         em7Dias: aniversariantes.filter((a) => a.dias <= 7).map((a) => a.aluna),
         em15Dias: aniversariantes.filter((a) => a.dias <= 15).map((a) => a.aluna),
         em30Dias: aniversariantes.map((a) => a.aluna),
+        doMes: aniversariantesDoMes,
+        porMes: aniversariantesPorMes,
       },
       semTreinoHa7Dias,
     };

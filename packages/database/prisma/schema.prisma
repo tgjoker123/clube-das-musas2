@@ -59,6 +59,7 @@ model Aluna {
   status       StatusAluna @default(ativa)
   dataEntrada  DateTime    @default(now())
   observacoes  String?
+  fotoUrl      String?
   createdAt    DateTime    @default(now())
 
   professor      Professor        @relation(fields: [professorId], references: [id], onDelete: Cascade)

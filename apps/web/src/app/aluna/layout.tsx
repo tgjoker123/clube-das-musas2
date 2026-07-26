@@ -55,23 +55,23 @@ export default function AlunaLayout({ children }: { children: React.ReactNode })
             Sair
           </button>
         </div>
-        <nav className="flex gap-2 overflow-x-auto px-4 pb-3 text-xs sm:hidden">
-          {LINKS.map((link) => (
-            <Link
-              key={link.href}
-              href={link.href}
-              className={`shrink-0 rounded-full px-3 py-1.5 transition-colors ${
-                pathname === link.href
-                  ? "bg-[color:var(--color-gold)]/15 text-[color:var(--color-gold-light)]"
-                  : "text-white/55"
-              }`}
-            >
-              {link.label}
-            </Link>
-          ))}
-        </nav>
       </header>
-      <div className="mx-auto max-w-3xl animate-fade-in p-4 sm:p-6">{children}</div>
+      <div className="mx-auto max-w-3xl animate-fade-in p-4 pb-24 sm:p-6 sm:pb-6">{children}</div>
+      <nav className="fixed inset-x-0 bottom-0 z-20 flex justify-around border-t border-neutral-200 bg-white/95 px-1 py-2 text-[11px] backdrop-blur-sm sm:hidden">
+        {LINKS.map((link) => (
+          <Link
+            key={link.href}
+            href={link.href}
+            className={`flex flex-1 flex-col items-center gap-0.5 rounded-lg px-1 py-1.5 text-center transition-colors ${
+              pathname === link.href
+                ? "text-[color:var(--color-gold-dark)]"
+                : "text-neutral-500"
+            }`}
+          >
+            {link.label}
+          </Link>
+        ))}
+      </nav>
     </div>
   );
 }

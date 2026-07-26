@@ -54,7 +54,7 @@ export const api = {
 };
 
 export async function uploadFile(
-  bucket: "checkin-photos" | "evolucao-fotos" | "exames",
+  bucket: "checkin-photos" | "evolucao-fotos" | "exames" | "aluna-fotos",
   file: File,
 ): Promise<string> {
   const extension = file.name.split(".").pop() ?? "bin";
@@ -70,4 +70,11 @@ export async function uploadFile(
 
   void signedUrl;
   return path;
+}
+
+const SUPABASE_URL = process.env["NEXT_PUBLIC_SUPABASE_URL"] ?? "";
+
+export async function uploadAlunaFoto(file: File): Promise<string> {
+  const path = await uploadFile("aluna-fotos", file);
+  return `${SUPABASE_URL}/storage/v1/object/public/aluna-fotos/${path}`;
 }

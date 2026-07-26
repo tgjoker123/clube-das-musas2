@@ -3,7 +3,7 @@ import type { SupabaseClient } from "@supabase/supabase-js";
 import { randomUUID } from "node:crypto";
 import { SUPABASE_ADMIN_CLIENT } from "../supabase/supabase.module";
 
-export type StorageBucket = "checkin-photos" | "evolucao-fotos" | "exames";
+export type StorageBucket = "checkin-photos" | "evolucao-fotos" | "exames" | "aluna-fotos";
 
 @Injectable()
 export class StorageService {

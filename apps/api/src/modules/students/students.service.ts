@@ -80,6 +80,7 @@ export class StudentsService {
           : {}),
         ...(dto.status !== undefined ? { status: dto.status } : {}),
         ...(dto.observacoes !== undefined ? { observacoes: dto.observacoes } : {}),
+        ...(dto.fotoUrl !== undefined ? { fotoUrl: dto.fotoUrl } : {}),
       },
     });
   }

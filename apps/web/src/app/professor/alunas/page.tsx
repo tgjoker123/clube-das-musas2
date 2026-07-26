@@ -11,6 +11,25 @@ interface Aluna {
   status: "ativa" | "suspensa" | "inadimplente";
   dataNascimento: string;
   authUserId: string | null;
+  fotoUrl: string | null;
+}
+
+function AvatarAluna({ nome, fotoUrl }: { nome: string; fotoUrl: string | null }) {
+  if (fotoUrl) {
+    // eslint-disable-next-line @next/next/no-img-element
+    return <img src={fotoUrl} alt={nome} className="h-8 w-8 rounded-full object-cover" />;
+  }
+  const iniciais = nome
+    .split(" ")
+    .slice(0, 2)
+    .map((p) => p[0])
+    .join("")
+    .toUpperCase();
+  return (
+    <span className="flex h-8 w-8 shrink-0 items-center justify-center rounded-full bg-[color:var(--color-gold)]/15 text-xs font-medium text-[color:var(--color-gold-dark)]">
+      {iniciais}
+    </span>
+  );
 }
 
 export default function AlunasPage() {
@@ -155,8 +174,9 @@ export default function AlunasPage() {
                 <td className="px-4 py-3">
                   <Link
                     href={`/professor/alunas/${a.id}`}
-                    className="text-neutral-900 hover:text-[color:var(--color-gold-dark)] hover:underline"
+                    className="flex items-center gap-2.5 text-neutral-900 hover:text-[color:var(--color-gold-dark)] hover:underline"
                   >
+                    <AvatarAluna nome={a.nome} fotoUrl={a.fotoUrl} />
                     {a.nome}
                   </Link>
                 </td>

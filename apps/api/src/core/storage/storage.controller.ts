@@ -3,7 +3,12 @@ import { SupabaseAuthGuard } from "../auth/supabase-auth.guard";
 import { RolesGuard } from "../auth/roles.guard";
 import { StorageService, type StorageBucket } from "./storage.service";
 
-const VALID_BUCKETS: StorageBucket[] = ["checkin-photos", "evolucao-fotos", "exames"];
+const VALID_BUCKETS: StorageBucket[] = [
+  "checkin-photos",
+  "evolucao-fotos",
+  "exames",
+  "aluna-fotos",
+];
 
 @Controller("storage")
 @UseGuards(SupabaseAuthGuard, RolesGuard)
