@@ -3,6 +3,9 @@
 import { useEffect, useState } from "react";
 import { api } from "@/lib/api";
 import { Celebration } from "@/components/celebration";
+import { RestTimer } from "@/components/rest-timer";
+import { AvaliacaoTreino } from "@/components/avaliacao-treino";
+import { DesafioAtual } from "@/components/desafio-atual";
 
 interface Exercicio {
   id: string;
@@ -135,6 +138,10 @@ export default function TreinoPage() {
 
       {erro && <p className="text-red-600">{erro}</p>}
 
+      <DesafioAtual />
+
+      <RestTimer />
+
       {fichas.length === 0 && (
         <p className="text-neutral-500">Nenhuma ficha associada ainda. Fale com seu professor.</p>
       )}
@@ -197,6 +204,8 @@ export default function TreinoPage() {
           </ul>
         </section>
       ))}
+
+      {fichas.length > 0 && <AvaliacaoTreino />}
     </div>
   );
 }

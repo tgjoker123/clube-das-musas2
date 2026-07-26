@@ -43,6 +43,7 @@ model Professor {
   alunas      Aluna[]
   exercicios  Exercicio[]
   fichas      FichaTreino[]
+  desafios    Desafio[]
 
   @@map("professores")
 }
@@ -65,6 +66,7 @@ model Aluna {
   evolucoes      EvolucaoFisica[]
   fichas         FichaAluna[]
   checkIns       CheckIn[]
+  avaliacoesTreino AvaliacaoTreino[]
 
   @@index([professorId])
   @@map("alunas")
@@ -181,4 +183,31 @@ model CheckIn {
   @@index([alunaId])
   @@index([exercicioId])
   @@map("check_ins")
+}
+
+model AvaliacaoTreino {
+  id        String   @id @default(uuid())
+  alunaId   String
+  data      DateTime @default(now())
+  nota      Int
+  createdAt DateTime @default(now())
+
+  aluna Aluna @relation(fields: [alunaId], references: [id], onDelete: Cascade)
+
+  @@index([alunaId])
+  @@map("avaliacoes_treino")
+}
+
+model Desafio {
+  id          String   @id @default(uuid())
+  professorId String
+  titulo      String
+  dataInicio  DateTime
+  dataFim     DateTime
+  createdAt   DateTime @default(now())
+
+  professor Professor @relation(fields: [professorId], references: [id], onDelete: Cascade)
+
+  @@index([professorId])
+  @@map("desafios")
 }

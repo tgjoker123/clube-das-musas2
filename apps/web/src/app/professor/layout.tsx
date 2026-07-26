@@ -12,6 +12,7 @@ const BASE_LINKS = [
   { href: "/professor/alunas", label: "Alunas" },
   { href: "/professor/exercicios", label: "Exercícios" },
   { href: "/professor/fichas-de-treino", label: "Fichas de treino" },
+  { href: "/professor/desafios", label: "Desafios" },
   { href: "/professor/interessadas", label: "Interessadas" },
 ];
 
