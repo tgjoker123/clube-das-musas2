@@ -1,11 +1,11 @@
-import { IsNotEmpty, IsString } from "class-validator";
+import { IsNotEmpty, IsOptional, IsString } from "class-validator";
 
 export class CompleteCheckInDto {
   @IsString()
   @IsNotEmpty()
   exercicioId!: string;
 
+  @IsOptional()
   @IsString()
-  @IsNotEmpty()
-  fotoUrl!: string;
+  fotoUrl?: string;
 }

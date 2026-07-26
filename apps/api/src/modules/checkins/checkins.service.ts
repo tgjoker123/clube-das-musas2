@@ -1,4 +1,4 @@
-import { BadRequestException, ForbiddenException, Injectable } from "@nestjs/common";
+import { ForbiddenException, Injectable } from "@nestjs/common";
 import { PrismaService } from "../../core/database/prisma.service";
 import type { CompleteCheckInDto } from "./dto/complete-checkin.dto";
 
@@ -6,15 +6,7 @@ import type { CompleteCheckInDto } from "./dto/complete-checkin.dto";
 export class CheckinsService {
   constructor(private readonly prisma: PrismaService) {}
 
-  /**
-   * Regra de negócio (spec §10): check-in só pode virar "concluido" com
-   * foto_url preenchida — validado aqui no backend, não só no front.
-   */
   async complete(alunaId: string, dto: CompleteCheckInDto) {
-    if (!dto.fotoUrl || dto.fotoUrl.trim().length === 0) {
-      throw new BadRequestException("Foto é obrigatória para concluir o exercício");
-    }
-
     return this.prisma.checkIn.create({
       data: {
         alunaId,

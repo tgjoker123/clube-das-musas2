@@ -1,7 +1,7 @@
 "use client";
 
 import { useEffect, useState } from "react";
-import { api, uploadFile } from "@/lib/api";
+import { api } from "@/lib/api";
 import { Celebration } from "@/components/celebration";
 
 interface Exercicio {
@@ -95,12 +95,11 @@ export default function TreinoPage() {
 
   const streakAtual = calcularStreak(checkIns);
 
-  async function handleConcluir(exercicioId: string, file: File) {
+  async function handleConcluir(exercicioId: string) {
     setEnviando(exercicioId);
     setErro(null);
     try {
-      const fotoUrl = await uploadFile("checkin-photos", file);
-      await api.post("/checkins", { exercicioId, fotoUrl });
+      await api.post("/checkins", { exercicioId });
       const checkInsAtualizados = await api.get<CheckIn[]>("/checkins/me");
       setCheckIns(checkInsAtualizados);
       const mensagem =
@@ -183,20 +182,13 @@ export default function TreinoPage() {
                         Concluído hoje ✓
                       </span>
                     ) : (
-                      <label className="gold-button inline-block cursor-pointer rounded-full px-4 py-2 text-sm font-medium disabled:opacity-50">
-                        {enviando === item.exercicio.id ? "Enviando..." : "Concluir exercício (anexar foto)"}
-                        <input
-                          type="file"
-                          accept="image/*"
-                          capture="environment"
-                          className="hidden"
-                          disabled={enviando === item.exercicio.id}
-                          onChange={(e) => {
-                            const file = e.target.files?.[0];
-                            if (file) handleConcluir(item.exercicio.id, file);
-                          }}
-                        />
-                      </label>
+                      <button
+                        onClick={() => handleConcluir(item.exercicio.id)}
+                        disabled={enviando === item.exercicio.id}
+                        className="gold-button rounded-full px-4 py-2 text-sm font-medium disabled:opacity-50"
+                      >
+                        {enviando === item.exercicio.id ? "Concluindo..." : "Concluir exercício"}
+                      </button>
                     )}
                   </div>
                 </li>
