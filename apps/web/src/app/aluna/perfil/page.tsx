@@ -2,6 +2,7 @@
 
 import { useEffect, useState } from "react";
 import { api } from "@/lib/api";
+import { createClient } from "@/lib/supabase/client";
 
 interface Anamnese {
   id: string;
@@ -37,12 +38,41 @@ export default function PerfilAlunaPage() {
   const [perfil, setPerfil] = useState<PerfilAluna | null>(null);
   const [erro, setErro] = useState<string | null>(null);
 
+  const [novaSenha, setNovaSenha] = useState("");
+  const [confirmarSenha, setConfirmarSenha] = useState("");
+  const [salvandoSenha, setSalvandoSenha] = useState(false);
+  const [erroSenha, setErroSenha] = useState<string | null>(null);
+  const [senhaAlterada, setSenhaAlterada] = useState(false);
+
   useEffect(() => {
     api
       .get<PerfilAluna>("/students/me")
       .then(setPerfil)
       .catch((err) => setErro(err instanceof Error ? err.message : "Erro ao carregar"));
   }, []);
+
+  async function trocarSenha(e: React.FormEvent) {
+    e.preventDefault();
+    setErroSenha(null);
+    setSenhaAlterada(false);
+    if (novaSenha !== confirmarSenha) {
+      setErroSenha("As senhas não coincidem.");
+      return;
+    }
+    setSalvandoSenha(true);
+    try {
+      const supabase = createClient();
+      const { error } = await supabase.auth.updateUser({ password: novaSenha });
+      if (error) throw error;
+      setNovaSenha("");
+      setConfirmarSenha("");
+      setSenhaAlterada(true);
+    } catch (err) {
+      setErroSenha(err instanceof Error ? err.message : "Erro ao trocar senha");
+    } finally {
+      setSalvandoSenha(false);
+    }
+  }
 
   if (erro) return <p className="text-red-600">{erro}</p>;
   if (!perfil) return <p>Carregando...</p>;
@@ -53,6 +83,43 @@ export default function PerfilAlunaPage() {
         <h1 className="font-brand text-3xl font-semibold text-neutral-900">{perfil.nome}</h1>
         <p className="text-sm text-neutral-500">{perfil.email}</p>
       </div>
+
+      <section className="app-card animate-fade-in-up space-y-3">
+        <h2 className="app-h2">Trocar senha</h2>
+        <form onSubmit={trocarSenha} className="flex flex-wrap items-end gap-2">
+          <label className="text-sm text-neutral-600">
+            Nova senha
+            <input
+              type="password"
+              required
+              minLength={6}
+              value={novaSenha}
+              onChange={(e) => setNovaSenha(e.target.value)}
+              className="app-input mt-1"
+            />
+          </label>
+          <label className="text-sm text-neutral-600">
+            Confirmar senha
+            <input
+              type="password"
+              required
+              minLength={6}
+              value={confirmarSenha}
+              onChange={(e) => setConfirmarSenha(e.target.value)}
+              className="app-input mt-1"
+            />
+          </label>
+          <button
+            type="submit"
+            disabled={salvandoSenha}
+            className="gold-button rounded-full px-4 py-2 text-xs font-medium disabled:opacity-50"
+          >
+            {salvandoSenha ? "Salvando..." : "Trocar senha"}
+          </button>
+        </form>
+        {erroSenha && <p className="text-xs text-red-600">{erroSenha}</p>}
+        {senhaAlterada && <p className="text-xs text-emerald-600">Senha alterada com sucesso.</p>}
+      </section>
 
       <section className="app-card animate-fade-in-up stagger-1 space-y-2">
         <h2 className="app-h2">Evolução física</h2>
