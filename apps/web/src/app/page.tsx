@@ -10,9 +10,9 @@ const RECURSOS = [
     ),
   },
   {
-    titulo: "Check-in com foto",
+    titulo: "Check-in e evolução",
     descricao:
-      "Cada exercício só é concluído com uma foto de comprovação — acompanhamento real, não só marcado.",
+      "Registre carga e repetições a cada treino, acompanhe seus recordes pessoais e comemore no feed com as colegas.",
     icone: (
       <>
         <path d="M4 8a2 2 0 0 1 2-2h1.5l1-1.5h7l1 1.5H18a2 2 0 0 1 2 2v9a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2z" />
