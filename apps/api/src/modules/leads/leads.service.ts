@@ -1,13 +1,36 @@
 import { Injectable, NotFoundException } from "@nestjs/common";
 import { PrismaService } from "../../core/database/prisma.service";
+import { MailService } from "../../core/mail/mail.service";
 import type { CreateLeadDto } from "./dto/create-lead.dto";
 
 @Injectable()
 export class LeadsService {
-  constructor(private readonly prisma: PrismaService) {}
+  constructor(
+    private readonly prisma: PrismaService,
+    private readonly mail: MailService,
+  ) {}
 
-  create(dto: CreateLeadDto) {
-    return this.prisma.lead.create({ data: dto });
+  async create(dto: CreateLeadDto) {
+    const lead = await this.prisma.lead.create({ data: dto });
+    await this.notificarProfessores(lead);
+    return lead;
+  }
+
+  private async notificarProfessores(lead: { nome: string; email: string; telefone: string; mensagem: string | null }) {
+    const professores = await this.prisma.professor.findMany({ select: { email: true } });
+    const destinatarios = professores.map((p) => p.email);
+
+    const html = `
+      <p>Uma nova interessada preencheu o formulário "Quero fazer parte":</p>
+      <ul>
+        <li><strong>Nome:</strong> ${lead.nome}</li>
+        <li><strong>E-mail:</strong> ${lead.email}</li>
+        <li><strong>WhatsApp:</strong> ${lead.telefone}</li>
+        ${lead.mensagem ? `<li><strong>Mensagem:</strong> ${lead.mensagem}</li>` : ""}
+      </ul>
+    `;
+
+    await this.mail.send(destinatarios, "Nova interessada no Clube das Musas", html);
   }
 
   list() {

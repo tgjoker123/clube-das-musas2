@@ -116,6 +116,13 @@ export class StudentsController {
     return this.studentsService.invite(user.professorId!, id, WEB_URL);
   }
 
+  @Get(":id/whatsapp-invite-link")
+  @UseGuards(SupabaseAuthGuard, RolesGuard)
+  @Roles("professor")
+  getWhatsappInviteLink(@CurrentUser() user: CurrentUserType, @Param("id") id: string) {
+    return this.studentsService.getWhatsappInviteLink(user.professorId!, id, WEB_URL);
+  }
+
   @Post(":id/activate")
   @UseGuards(SupabaseTokenGuard)
   activate(@Param("id") id: string, @SupabaseUser() authUser: AuthUser) {

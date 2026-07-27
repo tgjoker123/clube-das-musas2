@@ -3,6 +3,7 @@ import { AppController } from "./app.controller";
 import { DatabaseModule } from "./core/database/database.module";
 import { SupabaseModule } from "./core/supabase/supabase.module";
 import { StorageModule } from "./core/storage/storage.module";
+import { MailModule } from "./core/mail/mail.module";
 import { AuthModule } from "./core/auth/auth.module";
 import { ProfessorsModule } from "./modules/professors/professors.module";
 import { StudentsModule } from "./modules/students/students.module";
@@ -23,6 +24,7 @@ import { RecadosModule } from "./modules/recados/recados.module";
     DatabaseModule,
     SupabaseModule,
     StorageModule,
+    MailModule,
     AuthModule,
     ProfessorsModule,
     StudentsModule,

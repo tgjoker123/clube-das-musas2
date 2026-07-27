@@ -28,6 +28,7 @@ interface AlunaDetalhe {
   id: string;
   nome: string;
   email: string;
+  telefone: string | null;
   dataNascimento: string;
   status: "ativa" | "suspensa" | "inadimplente";
   observacoes: string | null;
@@ -43,6 +44,7 @@ export default function AlunaDetalhePage({ params }: { params: Promise<{ id: str
   const [erro, setErro] = useState<string | null>(null);
 
   const [nome, setNome] = useState("");
+  const [telefone, setTelefone] = useState("");
   const [dataNascimento, setDataNascimento] = useState("");
   const [status, setStatus] = useState<AlunaDetalhe["status"]>("ativa");
   const [observacoes, setObservacoes] = useState("");
@@ -60,6 +62,7 @@ export default function AlunaDetalhePage({ params }: { params: Promise<{ id: str
       .then((data) => {
         setAluna(data);
         setNome(data.nome);
+        setTelefone(data.telefone ?? "");
         setDataNascimento(data.dataNascimento.slice(0, 10));
         setStatus(data.status);
         setObservacoes(data.observacoes ?? "");
@@ -71,7 +74,7 @@ export default function AlunaDetalhePage({ params }: { params: Promise<{ id: str
 
   async function salvarDadosBasicos() {
     try {
-      await api.patch(`/students/${id}`, { nome, dataNascimento, status, observacoes });
+      await api.patch(`/students/${id}`, { nome, telefone, dataNascimento, status, observacoes });
       carregar();
     } catch (err) {
       setErro(err instanceof Error ? err.message : "Erro ao salvar");
@@ -184,6 +187,16 @@ export default function AlunaDetalhePage({ params }: { params: Promise<{ id: str
             type="text"
             value={nome}
             onChange={(e) => setNome(e.target.value)}
+            className="app-input mt-1"
+          />
+        </label>
+        <label className="block text-sm text-neutral-600">
+          WhatsApp
+          <input
+            type="text"
+            placeholder="Com DDD"
+            value={telefone}
+            onChange={(e) => setTelefone(e.target.value)}
             className="app-input mt-1"
           />
         </label>

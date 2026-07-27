@@ -8,6 +8,7 @@ interface Aluna {
   id: string;
   nome: string;
   email: string;
+  telefone: string | null;
   status: "ativa" | "suspensa" | "inadimplente";
   dataNascimento: string;
   authUserId: string | null;
@@ -39,6 +40,7 @@ export default function AlunasPage() {
   const [mostrarForm, setMostrarForm] = useState(false);
   const [nome, setNome] = useState("");
   const [email, setEmail] = useState("");
+  const [telefone, setTelefone] = useState("");
   const [dataNascimento, setDataNascimento] = useState("");
   const [salvando, setSalvando] = useState(false);
   const [excluindoId, setExcluindoId] = useState<string | null>(null);
@@ -64,9 +66,10 @@ export default function AlunasPage() {
     setSalvando(true);
     setErro(null);
     try {
-      await api.post("/students", { nome, email, dataNascimento });
+      await api.post("/students", { nome, email, telefone: telefone || undefined, dataNascimento });
       setNome("");
       setEmail("");
+      setTelefone("");
       setDataNascimento("");
       setMostrarForm(false);
       carregar();
@@ -83,6 +86,15 @@ export default function AlunasPage() {
       alert("Convite enviado.");
     } catch (err) {
       alert(err instanceof Error ? err.message : "Erro ao enviar convite");
+    }
+  }
+
+  async function handleInviteWhatsapp(id: string) {
+    try {
+      const { link } = await api.get<{ link: string }>(`/students/${id}/whatsapp-invite-link`);
+      window.open(link, "_blank");
+    } catch (err) {
+      alert(err instanceof Error ? err.message : "Erro ao gerar link de WhatsApp");
     }
   }
 
@@ -128,6 +140,13 @@ export default function AlunasPage() {
             required
             value={email}
             onChange={(e) => setEmail(e.target.value)}
+            className="app-input"
+          />
+          <input
+            type="text"
+            placeholder="WhatsApp (opcional, com DDD)"
+            value={telefone}
+            onChange={(e) => setTelefone(e.target.value)}
             className="app-input"
           />
           <input
@@ -193,6 +212,14 @@ export default function AlunasPage() {
                         className="app-link-gold p-1.5"
                       >
                         Enviar convite
+                      </button>
+                    )}
+                    {!a.authUserId && a.telefone && (
+                      <button
+                        onClick={() => handleInviteWhatsapp(a.id)}
+                        className="app-link-gold p-1.5"
+                      >
+                        WhatsApp
                       </button>
                     )}
                     {confirmandoId === a.id ? (

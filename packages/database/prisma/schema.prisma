@@ -32,11 +32,13 @@ model Lead {
 
 model Professor {
   id         String   @id @default(uuid())
-  authUserId String   @unique
+  authUserId String?  @unique
   nome       String
   email      String   @unique
   status     String   @default("ativo")
+  telefone   String?
   valorMensalidade Decimal?
+  percentualComissao Decimal?
   isAdmin    Boolean  @default(false)
   createdAt  DateTime @default(now())
 
@@ -55,6 +57,7 @@ model Aluna {
   authUserId   String?     @unique
   nome         String
   email        String
+  telefone     String?
   dataNascimento DateTime
   status       StatusAluna @default(ativa)
   dataEntrada  DateTime    @default(now())
@@ -282,4 +285,53 @@ model Desafio {
 
   @@index([professorId])
   @@map("desafios")
+}
+
+model ConfiguracaoPlataforma {
+  id                     String   @id @default("default")
+  percentualMarketplace  Decimal  @default(0)
+  percentualPlataforma   Decimal  @default(0)
+  updatedAt              DateTime @updatedAt
+
+  @@map("configuracao_plataforma")
+}
+
+model Parceiro {
+  id                 String   @id @default(uuid())
+  nome               String
+  categoria          String?
+  contato            String?
+  comissaoPercentual Decimal?
+  status             String   @default("ativo")
+  createdAt          DateTime @default(now())
+
+  itens ItemMarketplace[]
+
+  @@map("parceiros")
+}
+
+model ItemMarketplace {
+  id          String   @id @default(uuid())
+  parceiroId  String
+  nome        String
+  descricao   String?
+  preco       Decimal
+  status      String   @default("ativo")
+  createdAt   DateTime @default(now())
+
+  parceiro Parceiro @relation(fields: [parceiroId], references: [id], onDelete: Cascade)
+
+  @@index([parceiroId])
+  @@map("itens_marketplace")
+}
+
+model PlanoAssinatura {
+  id            String   @id @default(uuid())
+  nome          String
+  valor         Decimal
+  periodicidade String   @default("mensal")
+  ativo         Boolean  @default(true)
+  createdAt     DateTime @default(now())
+
+  @@map("planos_assinatura")
 }

@@ -14,4 +14,8 @@ export class CreateStudentDto {
   @IsOptional()
   @IsString()
   observacoes?: string;
+
+  @IsOptional()
+  @IsString()
+  telefone?: string;
 }

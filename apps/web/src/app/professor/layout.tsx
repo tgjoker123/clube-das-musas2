@@ -34,7 +34,7 @@ export default function ProfessorLayout({ children }: { children: React.ReactNod
   }, []);
 
   const links = isAdmin
-    ? [...BASE_LINKS, { href: "/professor/admin", label: "Admin" }]
+    ? [...BASE_LINKS, { href: "/professor/admin", label: "Ajustes" }]
     : BASE_LINKS;
 
   async function handleLogout() {

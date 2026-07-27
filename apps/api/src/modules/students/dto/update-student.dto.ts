@@ -22,4 +22,8 @@ export class UpdateStudentDto {
   @IsOptional()
   @IsString()
   fotoUrl?: string;
+
+  @IsOptional()
+  @IsString()
+  telefone?: string;
 }

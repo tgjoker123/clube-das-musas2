@@ -9,7 +9,8 @@ import { BrandMark } from "@/components/brand-mark";
 function AtivarContaForm() {
   const router = useRouter();
   const searchParams = useSearchParams();
-  const alunaId = searchParams.get("alunaId");
+  const tipo = searchParams.get("tipo") === "professor" ? "professor" : "aluna";
+  const id = searchParams.get(tipo === "professor" ? "professorId" : "alunaId");
   const [senha, setSenha] = useState("");
   const [erro, setErro] = useState<string | null>(null);
   const [carregando, setCarregando] = useState(false);
@@ -17,8 +18,8 @@ function AtivarContaForm() {
   async function handleSubmit(e: React.FormEvent) {
     e.preventDefault();
     setErro(null);
-    if (!alunaId) {
-      setErro("Link de ativação inválido: aluna não identificada.");
+    if (!id) {
+      setErro("Link de ativação inválido: usuário não identificado.");
       return;
     }
     setCarregando(true);
@@ -27,8 +28,13 @@ function AtivarContaForm() {
       const { error: updateError } = await supabase.auth.updateUser({ password: senha });
       if (updateError) throw updateError;
 
-      await api.post(`/students/${alunaId}/activate`);
-      router.push("/aluna/treino");
+      if (tipo === "professor") {
+        await api.post(`/professors/${id}/activate`);
+        router.push("/professor/dashboard");
+      } else {
+        await api.post(`/students/${id}/activate`);
+        router.push("/aluna/treino");
+      }
     } catch (err) {
       setErro(err instanceof Error ? err.message : "Falha ao ativar conta");
     } finally {
@@ -48,7 +54,9 @@ function AtivarContaForm() {
         Ativar minha conta
       </h1>
       <p className="mt-2 text-center text-sm text-white/50">
-        Defina uma senha para acessar seus treinos.
+        {tipo === "professor"
+          ? "Defina uma senha para acessar seu painel de professora."
+          : "Defina uma senha para acessar seus treinos."}
       </p>
 
       <form onSubmit={handleSubmit} className="mt-8 space-y-4">

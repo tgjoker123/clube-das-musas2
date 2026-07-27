@@ -8,6 +8,7 @@ import {
 import type { SupabaseClient } from "@supabase/supabase-js";
 import { PrismaService } from "../../core/database/prisma.service";
 import { SUPABASE_ADMIN_CLIENT } from "../../core/supabase/supabase.module";
+import { buildWhatsAppLink } from "../../core/utils/whatsapp";
 import type { AuthUser } from "../../core/auth/supabase-token.guard";
 import type { CreateStudentDto } from "./dto/create-student.dto";
 import type { UpdateStudentDto } from "./dto/update-student.dto";
@@ -37,6 +38,7 @@ export class StudentsService {
         professorId,
         nome: dto.nome,
         email: dto.email,
+        telefone: dto.telefone,
         dataNascimento: new Date(dto.dataNascimento),
         observacoes: dto.observacoes,
       },
@@ -81,6 +83,7 @@ export class StudentsService {
         ...(dto.status !== undefined ? { status: dto.status } : {}),
         ...(dto.observacoes !== undefined ? { observacoes: dto.observacoes } : {}),
         ...(dto.fotoUrl !== undefined ? { fotoUrl: dto.fotoUrl } : {}),
+        ...(dto.telefone !== undefined ? { telefone: dto.telefone } : {}),
       },
     });
   }
@@ -129,13 +132,35 @@ export class StudentsService {
     }
 
     const { error } = await this.supabase.auth.admin.inviteUserByEmail(aluna.email, {
-      redirectTo: `${webUrl}/ativar-conta?alunaId=${aluna.id}`,
+      redirectTo: `${webUrl}/ativar-conta?tipo=aluna&alunaId=${aluna.id}`,
     });
     if (error) {
       throw new BadRequestException(`Falha ao enviar convite: ${error.message}`);
     }
 
     return { ok: true };
+  }
+
+  async getWhatsappInviteLink(professorId: string, alunaId: string, webUrl: string) {
+    const aluna = await this.findOwnedOrThrow(professorId, alunaId);
+    if (aluna.authUserId) {
+      throw new BadRequestException("Aluna já ativou o acesso");
+    }
+    if (!aluna.telefone) {
+      throw new BadRequestException("Cadastre o telefone da aluna para enviar convite por WhatsApp");
+    }
+
+    const { data, error } = await this.supabase.auth.admin.generateLink({
+      type: "invite",
+      email: aluna.email,
+      options: { redirectTo: `${webUrl}/ativar-conta?tipo=aluna&alunaId=${aluna.id}` },
+    });
+    if (error || !data) {
+      throw new BadRequestException(`Falha ao gerar link de convite: ${error?.message}`);
+    }
+
+    const mensagem = `Oi, ${aluna.nome}! Aqui é do Clube das Musas. Segue seu link para ativar sua conta e acessar seus treinos: ${data.properties.action_link}`;
+    return { link: buildWhatsAppLink(aluna.telefone, mensagem) };
   }
 
   async activate(alunaId: string, authUser: AuthUser) {
