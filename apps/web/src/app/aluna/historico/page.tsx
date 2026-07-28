@@ -34,7 +34,10 @@ export default function HistoricoPage() {
 
   return (
     <div className="space-y-6">
-      <h1 className="font-brand text-3xl font-semibold text-neutral-900">Meu histórico</h1>
+      <div className="page-header">
+        <h1 className="page-title">Meu histórico</h1>
+        <p className="page-subtitle">Cada treino concluído fica registrado aqui.</p>
+      </div>
 
       {checkIns.length === 0 ? (
         <EmptyState message="Nenhum treino concluído ainda. Bora começar hoje?" />

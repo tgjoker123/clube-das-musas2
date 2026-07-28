@@ -145,8 +145,8 @@ export default function TreinoPage() {
         />
       )}
 
-      <div className="flex items-center justify-between">
-        <h1 className="font-brand text-3xl font-semibold text-neutral-900">
+      <div className="page-header flex items-center justify-between">
+        <h1 className="page-title">
           Minha ficha de treino
         </h1>
         {streakAtual > 0 && (

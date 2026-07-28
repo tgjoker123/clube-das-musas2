@@ -220,9 +220,12 @@ export default function ExerciciosPage() {
 
   return (
     <div className="space-y-6">
-      <h1 className="font-brand text-3xl font-semibold text-neutral-900">
+      <div className="page-header">
+        <h1 className="page-title">
         Biblioteca de exercícios
       </h1>
+        <p className="page-subtitle">Monte a biblioteca que abastece suas fichas de treino.</p>
+      </div>
 
       <form onSubmit={handleCreate} className="app-card animate-fade-in-up max-w-lg space-y-4">
         <h2 className="app-h2">Novo exercício</h2>

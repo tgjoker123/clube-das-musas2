@@ -99,7 +99,7 @@ export default function FichaDetalhePage({ params }: { params: Promise<{ id: str
   return (
     <div className="max-w-2xl space-y-6">
       <BackLink href="/professor/fichas-de-treino" label="Voltar para fichas de treino" />
-      <h1 className="font-brand text-3xl font-semibold text-neutral-900">{ficha.nomeTemplate}</h1>
+      <div className="page-header"><h1 className="page-title">{ficha.nomeTemplate}</h1></div>
 
       <section className="app-card animate-fade-in-up stagger-1 space-y-3">
         <h2 className="app-h2">Exercícios da ficha</h2>

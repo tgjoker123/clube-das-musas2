@@ -37,9 +37,9 @@ const SECOES = [
 export default function AjustesPage() {
   return (
     <div className="space-y-6">
-      <div>
-        <h1 className="font-brand text-3xl font-semibold text-neutral-900">Ajustes</h1>
-        <p className="text-sm text-neutral-500">Painel do Administrador do SaaS.</p>
+      <div className="page-header">
+        <h1 className="page-title">Ajustes</h1>
+        <p className="page-subtitle">Painel do Administrador do SaaS.</p>
       </div>
 
       <div className="grid gap-4 sm:grid-cols-2">

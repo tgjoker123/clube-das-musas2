@@ -184,9 +184,9 @@ export default function AlunaDetalhePage({ params }: { params: Promise<{ id: str
             onChange={handleTrocarFoto}
           />
         </label>
-        <div>
-          <h1 className="font-brand text-3xl font-semibold text-neutral-900">{aluna.nome}</h1>
-          <p className="text-sm text-neutral-500">{aluna.email}</p>
+        <div className="page-header">
+          <h1 className="page-title">{aluna.nome}</h1>
+          <p className="page-subtitle">{aluna.email}</p>
         </div>
       </div>
 

@@ -44,8 +44,8 @@ export default function ProfessorLayout({ children }: { children: React.ReactNod
   }
 
   return (
-    <div className="min-h-screen bg-neutral-50">
-      <header className="brand-surface sticky top-0 z-10 border-b border-white/5">
+    <div className="app-shell">
+      <header className="brand-surface app-topbar sticky top-0 z-10">
         <div className="mx-auto flex max-w-6xl items-center justify-between px-4 py-3 sm:px-6 sm:py-4">
           <span className="flex items-center gap-2">
             <BrandMark size={26} />

@@ -141,9 +141,9 @@ export default function InteressadasPage() {
 
   return (
     <div className="space-y-6">
-      <div>
-        <h1 className="font-brand text-3xl font-semibold text-neutral-900">Interessadas</h1>
-        <p className="text-sm text-neutral-500">
+      <div className="page-header">
+        <h1 className="page-title">Interessadas</h1>
+        <p className="page-subtitle">
           Pessoas que preencheram o formulário &quot;Quero fazer parte&quot; no site.
         </p>
       </div>

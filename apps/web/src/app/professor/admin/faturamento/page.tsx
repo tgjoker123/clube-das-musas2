@@ -72,7 +72,10 @@ export default function FaturamentoAdminPage() {
   return (
     <div className="space-y-6">
       <BackLink href="/professor/admin" label="Voltar para ajustes" />
-      <h1 className="font-brand text-3xl font-semibold text-neutral-900">Faturamento</h1>
+      <div className="page-header">
+        <h1 className="page-title">Faturamento</h1>
+        <p className="page-subtitle">Faturamento da plataforma e comissões por professor.</p>
+      </div>
 
       <div className="grid grid-cols-2 gap-3 sm:gap-4">
         <div className="app-card">
@@ -131,10 +134,10 @@ export default function FaturamentoAdminPage() {
         {dados.porProfessor.length === 0 ? (
           <EmptyState message="Nenhum professor cadastrado." />
         ) : (
-          <div className="overflow-x-auto rounded-2xl border border-neutral-200 bg-white shadow-sm">
+          <div className="app-table-wrap">
             <table className="w-full min-w-[620px] text-left text-sm">
               <thead>
-                <tr className="border-b">
+                <tr className="app-table-head">
                   <th className="px-4 py-3">Professor</th>
                   <th className="px-4 py-3">Alunas ativas</th>
                   <th className="px-4 py-3">Faturamento</th>

@@ -142,9 +142,9 @@ export default function FeedPage() {
 
   return (
     <div className="max-w-2xl space-y-6">
-      <div>
-        <h1 className="font-brand text-3xl font-semibold text-neutral-900">Feed</h1>
-        <p className="text-sm text-neutral-500">Veja os treinos das suas colegas e torça por elas.</p>
+      <div className="page-header">
+        <h1 className="page-title">Feed</h1>
+        <p className="page-subtitle">Veja os treinos das suas colegas e torça por elas.</p>
       </div>
 
       {posts === null && <p className="text-neutral-500">Carregando...</p>}

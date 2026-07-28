@@ -40,9 +40,9 @@ export default function RecordesPage() {
 
   return (
     <div className="max-w-2xl space-y-6">
-      <div>
-        <h1 className="font-brand text-3xl font-semibold text-neutral-900">Meus recordes</h1>
-        <p className="text-sm text-neutral-500">
+      <div className="page-header">
+        <h1 className="page-title">Meus recordes</h1>
+        <p className="page-subtitle">
           Sua evolução de carga em cada exercício, registrada nos check-ins.
         </p>
       </div>

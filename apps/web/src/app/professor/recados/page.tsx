@@ -70,9 +70,9 @@ export default function RecadosPage() {
 
   return (
     <div className="max-w-2xl space-y-6">
-      <div>
-        <h1 className="font-brand text-3xl font-semibold text-neutral-900">Mural de recados</h1>
-        <p className="text-sm text-neutral-500">
+      <div className="page-header">
+        <h1 className="page-title">Mural de recados</h1>
+        <p className="page-subtitle">
           Envie um recado para todas as alunas ou só para uma em específico.
         </p>
       </div>

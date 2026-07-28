@@ -133,9 +133,9 @@ export default function DesafiosPage() {
 
   return (
     <div className="space-y-6">
-      <div>
-        <h1 className="font-brand text-3xl font-semibold text-neutral-900">Desafios</h1>
-        <p className="text-sm text-neutral-500">
+      <div className="page-header">
+        <h1 className="page-title">Desafios</h1>
+        <p className="page-subtitle">
           Crie quantos desafios quiser, com métricas diferentes, e acompanhe o ranking de cada um.
         </p>
       </div>

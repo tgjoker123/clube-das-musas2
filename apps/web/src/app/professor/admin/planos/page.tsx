@@ -82,8 +82,8 @@ export default function PlanosAdminPage() {
   return (
     <div className="space-y-6">
       <BackLink href="/professor/admin" label="Voltar para ajustes" />
-      <div className="flex items-center justify-between">
-        <h1 className="font-brand text-3xl font-semibold text-neutral-900">
+      <div className="page-header flex items-center justify-between">
+        <h1 className="page-title">
           Preços e assinaturas
         </h1>
         <button

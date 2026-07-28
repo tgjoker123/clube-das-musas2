@@ -108,17 +108,22 @@ export default function ProfessorDashboardPage() {
 
   return (
     <div className="space-y-8 sm:space-y-10">
-      <h1 className="font-brand text-2xl font-semibold text-neutral-900 sm:text-3xl">Dashboard</h1>
+      <div className="page-header">
+        <h1 className="page-title">Dashboard</h1>
+        <p className="page-subtitle">Um panorama do seu time de alunas.</p>
+      </div>
 
       <div className="grid grid-cols-2 gap-3 sm:gap-4 lg:grid-cols-4">
         {cards.map((card, i) => (
           <button
             key={card.label}
             onClick={() => setDetalhe(card.chave)}
-            className={`animate-fade-in-up stagger-${i + 1} rounded-2xl border border-neutral-200 bg-white p-4 text-left shadow-sm transition-shadow hover:shadow-md sm:p-6`}
+            className={`app-card-dark animate-fade-in-up stagger-${i + 1} text-left sm:p-6`}
           >
-            <p className="text-xs text-neutral-500 sm:text-sm">{card.label}</p>
-            <p className="mt-1 font-brand text-xl font-semibold text-[color:var(--color-gold-dark)] sm:text-3xl">
+            <p className="text-xs tracking-wide text-white/50 uppercase sm:text-[0.7rem]">
+              {card.label}
+            </p>
+            <p className="shimmer-text-bright font-brand mt-2 text-2xl font-semibold sm:text-4xl">
               {card.valor}
             </p>
           </button>

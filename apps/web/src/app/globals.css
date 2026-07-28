@@ -117,41 +117,177 @@ body {
   background: rgba(255, 255, 255, 0.06);
 }
 
-/* Superfícies da área logada (tema claro, dourado como destaque) */
+/* Superfícies da área logada (marfim quente + dourado como destaque) */
+
+/* Fundo da área logada: marfim com brilho dourado no topo, em vez de cinza chapado */
+.app-shell {
+  background:
+    radial-gradient(ellipse 80% 40% at 50% 0%, rgba(201, 162, 39, 0.1), transparent 70%),
+    linear-gradient(180deg, #fbf9f4 0%, #f6f4ef 100%);
+  background-attachment: fixed;
+  min-height: 100vh;
+}
+
+/* Cabeçalho de página: título serifado grande + régua dourada */
+.page-header {
+  position: relative;
+  padding-bottom: 1rem;
+  margin-bottom: 0.5rem;
+}
+
+.page-header::after {
+  content: "";
+  position: absolute;
+  left: 0;
+  bottom: 0;
+  width: 3.5rem;
+  height: 2px;
+  background: linear-gradient(90deg, var(--color-gold), rgba(201, 162, 39, 0));
+}
+
+.page-title {
+  font-family: var(--font-serif);
+  font-size: 2rem;
+  font-weight: 600;
+  letter-spacing: 0.01em;
+  color: #1a1814;
+  line-height: 1.1;
+}
+
+@media (min-width: 640px) {
+  .page-title {
+    font-size: 2.5rem;
+  }
+}
+
+.page-subtitle {
+  margin-top: 0.5rem;
+  font-size: 0.875rem;
+  color: #8b8578;
+}
+
 .app-card {
+  position: relative;
   background: #fff;
-  border: 1px solid rgb(228 228 231);
-  border-radius: 1rem;
+  border: 1px solid rgba(201, 162, 39, 0.14);
+  border-radius: 1.25rem;
   padding: 1.5rem;
-  box-shadow: 0 1px 2px rgba(0, 0, 0, 0.03);
-  transition: box-shadow 0.25s ease, transform 0.25s ease;
+  box-shadow:
+    0 1px 2px rgba(26, 24, 20, 0.04),
+    0 8px 24px -16px rgba(26, 24, 20, 0.12);
+  transition: box-shadow 0.3s ease, transform 0.3s ease, border-color 0.3s ease;
 }
 
 .app-card:hover {
-  box-shadow: 0 12px 28px -12px rgba(0, 0, 0, 0.12);
+  border-color: rgba(201, 162, 39, 0.3);
+  box-shadow:
+    0 1px 2px rgba(26, 24, 20, 0.04),
+    0 18px 40px -20px rgba(138, 109, 26, 0.28);
+  transform: translateY(-2px);
 }
 
+/* Card escuro: usado nos indicadores, traz a marca para dentro do app */
+.app-card-dark {
+  position: relative;
+  overflow: hidden;
+  background:
+    radial-gradient(ellipse 90% 70% at 20% 0%, rgba(201, 162, 39, 0.16), transparent 70%),
+    linear-gradient(160deg, #1c1a16 0%, #0d0c0a 100%);
+  border: 1px solid rgba(201, 162, 39, 0.22);
+  border-radius: 1.25rem;
+  padding: 1.25rem;
+  color: #f5f1e6;
+  box-shadow: 0 14px 34px -20px rgba(0, 0, 0, 0.7);
+  transition: transform 0.3s ease, box-shadow 0.3s ease, border-color 0.3s ease;
+}
+
+.app-card-dark:hover {
+  transform: translateY(-3px);
+  border-color: rgba(201, 162, 39, 0.45);
+  box-shadow: 0 22px 46px -22px rgba(138, 109, 26, 0.6);
+}
+
+/* Título de seção com barra dourada à esquerda */
 .app-h2 {
+  position: relative;
   font-family: var(--font-serif);
   letter-spacing: 0.02em;
-  font-size: 1.125rem;
-  color: rgb(23 23 23);
+  font-size: 1.2rem;
+  color: #1a1814;
+  padding-left: 0.7rem;
+}
+
+.app-h2::before {
+  content: "";
+  position: absolute;
+  left: 0;
+  top: 0.15em;
+  bottom: 0.15em;
+  width: 3px;
+  border-radius: 2px;
+  background: linear-gradient(180deg, var(--color-gold-light), var(--color-gold-dark));
 }
 
 .app-input {
   width: 100%;
-  border-radius: 0.6rem;
-  border: 1px solid rgb(212 212 216);
-  padding: 0.6rem 0.9rem;
+  border-radius: 0.75rem;
+  border: 1px solid rgba(26, 24, 20, 0.14);
+  padding: 0.65rem 0.95rem;
   font-size: 0.875rem;
-  background: #fff;
-  transition: border-color 0.2s ease, box-shadow 0.2s ease;
+  background: #fdfcfa;
+  transition: border-color 0.2s ease, box-shadow 0.2s ease, background-color 0.2s ease;
 }
 
 .app-input:focus {
   outline: none;
+  background: #fff;
   border-color: var(--color-gold);
   box-shadow: 0 0 0 3px rgba(201, 162, 39, 0.15);
+}
+
+/* Barra superior da área logada, com fio dourado na base */
+.app-topbar {
+  position: relative;
+}
+
+.app-topbar::after {
+  content: "";
+  position: absolute;
+  inset-inline: 0;
+  bottom: 0;
+  height: 1px;
+  background: linear-gradient(
+    90deg,
+    transparent,
+    rgba(201, 162, 39, 0.5) 20%,
+    rgba(201, 162, 39, 0.5) 80%,
+    transparent
+  );
+}
+
+/* Tabelas com a mesma linguagem dos cards */
+.app-table-wrap {
+  overflow-x: auto;
+  background: #fff;
+  border: 1px solid rgba(201, 162, 39, 0.14);
+  border-radius: 1.25rem;
+  box-shadow:
+    0 1px 2px rgba(26, 24, 20, 0.04),
+    0 8px 24px -16px rgba(26, 24, 20, 0.12);
+}
+
+.app-table-head {
+  border-bottom: 1px solid rgba(201, 162, 39, 0.18);
+  background: linear-gradient(180deg, rgba(201, 162, 39, 0.07), rgba(201, 162, 39, 0.02));
+}
+
+.app-table-head th {
+  font-family: var(--font-serif);
+  font-weight: 600;
+  font-size: 0.8rem;
+  letter-spacing: 0.03em;
+  color: #6b6558;
+  text-transform: uppercase;
 }
 
 .app-link-gold {
@@ -231,6 +367,28 @@ body {
   background-clip: text;
   color: transparent;
   animation: shimmer 3.5s linear infinite;
+}
+
+/* Variação do shimmer para fundos escuros: mantém o dourado sempre claro */
+.shimmer-text-bright {
+  background: linear-gradient(
+    100deg,
+    var(--color-gold) 30%,
+    #f7e6b0 45%,
+    #f7e6b0 55%,
+    var(--color-gold) 70%
+  );
+  background-size: 200% 100%;
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
+  animation: shimmer 3.5s linear infinite;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .shimmer-text-bright {
+    animation: none !important;
+  }
 }
 
 .stagger-1 {

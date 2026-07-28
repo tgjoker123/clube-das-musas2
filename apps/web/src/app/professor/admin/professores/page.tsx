@@ -97,8 +97,8 @@ export default function ProfessoresAdminPage() {
   return (
     <div className="space-y-6">
       <BackLink href="/professor/admin" label="Voltar para ajustes" />
-      <div className="flex items-center justify-between">
-        <h1 className="font-brand text-3xl font-semibold text-neutral-900">Professores</h1>
+      <div className="page-header flex items-center justify-between">
+        <h1 className="page-title">Professores</h1>
         <button
           onClick={() => setMostrarForm((v) => !v)}
           className="gold-button rounded-full px-5 py-2 text-sm font-medium"
@@ -164,10 +164,10 @@ export default function ProfessoresAdminPage() {
 
       {erro && <p className="text-red-600">{erro}</p>}
 
-      <div className="overflow-x-auto rounded-2xl border border-neutral-200 bg-white shadow-sm">
+      <div className="app-table-wrap">
         <table className="w-full min-w-[720px] text-left text-sm">
           <thead>
-            <tr className="border-b">
+            <tr className="app-table-head">
               <th className="px-4 py-3">Nome</th>
               <th className="px-4 py-3">E-mail</th>
               <th className="px-4 py-3">% comissão</th>

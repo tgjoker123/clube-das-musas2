@@ -94,8 +94,8 @@ export default function MarketplaceAdminPage() {
   return (
     <div className="space-y-6">
       <BackLink href="/professor/admin" label="Voltar para ajustes" />
-      <div className="flex items-center justify-between">
-        <h1 className="font-brand text-3xl font-semibold text-neutral-900">Marketplace</h1>
+      <div className="page-header flex items-center justify-between">
+        <h1 className="page-title">Marketplace</h1>
         <button
           onClick={() => setMostrarForm((v) => !v)}
           className="gold-button rounded-full px-5 py-2 text-sm font-medium"

@@ -38,7 +38,10 @@ export default function FichasDeTreinoPage() {
 
   return (
     <div className="space-y-6">
-      <h1 className="font-brand text-3xl font-semibold text-neutral-900">Fichas de treino</h1>
+      <div className="page-header">
+        <h1 className="page-title">Fichas de treino</h1>
+        <p className="page-subtitle">Templates de treino que você associa às alunas.</p>
+      </div>
 
       <form onSubmit={handleCreate} className="app-card animate-fade-in-up max-w-lg space-y-4">
         <h2 className="app-h2">Novo template</h2>

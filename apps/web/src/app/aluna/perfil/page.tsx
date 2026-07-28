@@ -80,9 +80,9 @@ export default function PerfilAlunaPage() {
 
   return (
     <div className="space-y-6">
-      <div>
-        <h1 className="font-brand text-3xl font-semibold text-neutral-900">{perfil.nome}</h1>
-        <p className="text-sm text-neutral-500">{perfil.email}</p>
+      <div className="page-header">
+        <h1 className="page-title">{perfil.nome}</h1>
+        <p className="page-subtitle">{perfil.email}</p>
       </div>
 
       <section className="app-card animate-fade-in-up space-y-3">
