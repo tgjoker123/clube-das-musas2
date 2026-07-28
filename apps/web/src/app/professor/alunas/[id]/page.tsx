@@ -3,6 +3,7 @@
 import { use, useEffect, useState } from "react";
 import { api, uploadFile, uploadAlunaFoto } from "@/lib/api";
 import { BackLink } from "@/components/back-link";
+import { EmptyState, IconBadge, Icon, ICONS } from "@/components/empty-state";
 
 interface Anamnese {
   id: string;
@@ -179,48 +180,50 @@ export default function AlunaDetalhePage({ params }: { params: Promise<{ id: str
         </div>
       </div>
 
-      <section className="app-card animate-fade-in-up stagger-1 space-y-3">
+      <section className="app-card animate-fade-in-up stagger-1 space-y-4">
         <h2 className="app-h2">Dados do cadastro</h2>
-        <label className="block text-sm text-neutral-600">
-          Nome
-          <input
-            type="text"
-            value={nome}
-            onChange={(e) => setNome(e.target.value)}
-            className="app-input mt-1"
-          />
-        </label>
-        <label className="block text-sm text-neutral-600">
-          WhatsApp
-          <input
-            type="text"
-            placeholder="Com DDD"
-            value={telefone}
-            onChange={(e) => setTelefone(e.target.value)}
-            className="app-input mt-1"
-          />
-        </label>
-        <label className="block text-sm text-neutral-600">
-          Data de nascimento
-          <input
-            type="date"
-            value={dataNascimento}
-            onChange={(e) => setDataNascimento(e.target.value)}
-            className="app-input mt-1"
-          />
-        </label>
-        <label className="block text-sm text-neutral-600">
-          Status
-          <select
-            value={status}
-            onChange={(e) => setStatus(e.target.value as AlunaDetalhe["status"])}
-            className="app-input mt-1"
-          >
-            <option value="ativa">Ativa</option>
-            <option value="suspensa">Suspensa</option>
-            <option value="inadimplente">Inadimplente</option>
-          </select>
-        </label>
+        <div className="grid gap-3 sm:grid-cols-2">
+          <label className="block text-sm text-neutral-600">
+            Nome
+            <input
+              type="text"
+              value={nome}
+              onChange={(e) => setNome(e.target.value)}
+              className="app-input mt-1"
+            />
+          </label>
+          <label className="block text-sm text-neutral-600">
+            WhatsApp
+            <input
+              type="text"
+              placeholder="Com DDD"
+              value={telefone}
+              onChange={(e) => setTelefone(e.target.value)}
+              className="app-input mt-1"
+            />
+          </label>
+          <label className="block text-sm text-neutral-600">
+            Data de nascimento
+            <input
+              type="date"
+              value={dataNascimento}
+              onChange={(e) => setDataNascimento(e.target.value)}
+              className="app-input mt-1"
+            />
+          </label>
+          <label className="block text-sm text-neutral-600">
+            Status
+            <select
+              value={status}
+              onChange={(e) => setStatus(e.target.value as AlunaDetalhe["status"])}
+              className="app-input mt-1"
+            >
+              <option value="ativa">Ativa</option>
+              <option value="suspensa">Suspensa</option>
+              <option value="inadimplente">Inadimplente</option>
+            </select>
+          </label>
+        </div>
         <label className="block text-sm text-neutral-600">
           Observações
           <textarea
@@ -236,16 +239,25 @@ export default function AlunaDetalhePage({ params }: { params: Promise<{ id: str
 
       <section className="app-card animate-fade-in-up stagger-2 space-y-3">
         <h2 className="app-h2">Anamnese</h2>
-        <ul className="space-y-2 text-sm">
-          {aluna.anamneses.map((a) => (
-            <li key={a.id} className="rounded-lg bg-neutral-50 p-3">
-              <p className="text-xs text-neutral-500">
-                {new Date(a.data).toLocaleDateString("pt-BR")}
-              </p>
-              <p className="text-neutral-700">{a.respostasJson.texto}</p>
-            </li>
-          ))}
-        </ul>
+        {aluna.anamneses.length === 0 ? (
+          <EmptyState message="Nenhuma anamnese registrada ainda." />
+        ) : (
+          <ul className="space-y-2 text-sm">
+            {aluna.anamneses.map((a) => (
+              <li key={a.id} className="flex gap-3 rounded-xl bg-neutral-50 p-3">
+                <IconBadge size={8}>
+                  <Icon size={15} path={ICONS.nota} />
+                </IconBadge>
+                <div>
+                  <p className="text-xs text-neutral-500">
+                    {new Date(a.data).toLocaleDateString("pt-BR")}
+                  </p>
+                  <p className="text-neutral-700">{a.respostasJson.texto}</p>
+                </div>
+              </li>
+            ))}
+          </ul>
+        )}
         <form onSubmit={salvarAnamnese} className="space-y-2">
           <textarea
             placeholder="Respostas da anamnese (saúde, objetivos, restrições...)"
@@ -261,13 +273,22 @@ export default function AlunaDetalhePage({ params }: { params: Promise<{ id: str
 
       <section className="app-card animate-fade-in-up stagger-3 space-y-3">
         <h2 className="app-h2">Exames de sangue</h2>
-        <ul className="space-y-1 text-sm text-neutral-700">
-          {aluna.exames.map((ex) => (
-            <li key={ex.id}>
-              {new Date(ex.dataExame).toLocaleDateString("pt-BR")} — {ex.arquivoUrl}
-            </li>
-          ))}
-        </ul>
+        {aluna.exames.length === 0 ? (
+          <EmptyState message="Nenhum exame registrado ainda." />
+        ) : (
+          <ul className="space-y-2">
+            {aluna.exames.map((ex) => (
+              <li key={ex.id} className="flex items-center gap-3 rounded-xl bg-neutral-50 p-3">
+                <IconBadge size={8}>
+                  <Icon size={15} path={ICONS.exame} />
+                </IconBadge>
+                <p className="text-sm text-neutral-900">
+                  {new Date(ex.dataExame).toLocaleDateString("pt-BR")}
+                </p>
+              </li>
+            ))}
+          </ul>
+        )}
         <form onSubmit={salvarExame} className="flex flex-wrap items-center gap-2">
           <input
             type="file"
@@ -289,15 +310,25 @@ export default function AlunaDetalhePage({ params }: { params: Promise<{ id: str
 
       <section className="app-card animate-fade-in-up stagger-4 space-y-3">
         <h2 className="app-h2">Evolução física</h2>
-        <ul className="space-y-1 text-sm text-neutral-700">
-          {aluna.evolucoes.map((ev) => (
-            <li key={ev.id}>
-              {new Date(ev.data).toLocaleDateString("pt-BR")}
-              {ev.peso ? ` — ${ev.peso} kg` : ""}
-              {ev.fotoUrl ? ` — foto: ${ev.fotoUrl}` : ""}
-            </li>
-          ))}
-        </ul>
+        {aluna.evolucoes.length === 0 ? (
+          <EmptyState message="Nenhum registro de evolução ainda." />
+        ) : (
+          <ul className="space-y-2">
+            {aluna.evolucoes.map((ev) => (
+              <li key={ev.id} className="flex items-center gap-3 rounded-xl bg-neutral-50 p-3">
+                <IconBadge size={8}>
+                  <Icon size={15} path={ICONS.evolucao} />
+                </IconBadge>
+                <div className="text-sm">
+                  <p className="text-neutral-900">
+                    {new Date(ev.data).toLocaleDateString("pt-BR")}
+                  </p>
+                  {ev.peso && <p className="text-xs text-neutral-500">{ev.peso} kg</p>}
+                </div>
+              </li>
+            ))}
+          </ul>
+        )}
         <form onSubmit={salvarEvolucao} className="flex flex-wrap items-center gap-2">
           <input
             type="number"

@@ -3,6 +3,7 @@
 import { useEffect, useState } from "react";
 import { api } from "@/lib/api";
 import { BackLink } from "@/components/back-link";
+import { EmptyState, IconBadge, Icon, ICONS } from "@/components/empty-state";
 
 interface Plano {
   id: string;
@@ -99,25 +100,28 @@ export default function PlanosAdminPage() {
       </p>
 
       {mostrarForm && (
-        <form onSubmit={handleCreate} className="app-card animate-fade-in-up max-w-md space-y-3">
-          <input
-            type="text"
-            placeholder="Nome do plano"
-            required
-            value={nome}
-            onChange={(e) => setNome(e.target.value)}
-            className="app-input"
-          />
-          <input
-            type="number"
-            step="0.01"
-            min="0"
-            placeholder="Valor (R$)"
-            required
-            value={valor}
-            onChange={(e) => setValor(e.target.value)}
-            className="app-input"
-          />
+        <form onSubmit={handleCreate} className="app-card animate-fade-in-up max-w-lg space-y-4">
+          <h2 className="app-h2">Novo plano</h2>
+          <div className="grid gap-3 sm:grid-cols-2">
+            <input
+              type="text"
+              placeholder="Nome do plano"
+              required
+              value={nome}
+              onChange={(e) => setNome(e.target.value)}
+              className="app-input"
+            />
+            <input
+              type="number"
+              step="0.01"
+              min="0"
+              placeholder="Valor (R$)"
+              required
+              value={valor}
+              onChange={(e) => setValor(e.target.value)}
+              className="app-input"
+            />
+          </div>
           <select
             value={periodicidade}
             onChange={(e) => setPeriodicidade(e.target.value)}
@@ -142,13 +146,18 @@ export default function PlanosAdminPage() {
       {erro && <p className="text-red-600">{erro}</p>}
 
       {planos.length === 0 ? (
-        <p className="text-neutral-500">Nenhum plano cadastrado.</p>
+        <EmptyState message="Nenhum plano cadastrado." />
       ) : (
         <ul className="grid gap-3 sm:grid-cols-2">
           {planos.map((plano) => (
             <li key={plano.id} className="app-card space-y-1">
-              <div className="flex items-start justify-between">
-                <p className="font-medium text-neutral-900">{plano.nome}</p>
+              <div className="flex items-start justify-between gap-2">
+                <div className="flex items-center gap-3">
+                  <IconBadge>
+                    <Icon path={ICONS.moeda} />
+                  </IconBadge>
+                  <p className="font-medium text-neutral-900">{plano.nome}</p>
+                </div>
                 <span
                   className={`rounded-full px-2 py-0.5 text-xs font-medium ${
                     plano.ativo

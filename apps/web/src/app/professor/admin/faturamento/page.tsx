@@ -3,6 +3,7 @@
 import { useEffect, useState } from "react";
 import { api } from "@/lib/api";
 import { BackLink } from "@/components/back-link";
+import { EmptyState } from "@/components/empty-state";
 
 interface FaturamentoProfessor {
   professorId: string;
@@ -128,7 +129,7 @@ export default function FaturamentoAdminPage() {
       <section className="space-y-3">
         <h2 className="app-h2">Por professor</h2>
         {dados.porProfessor.length === 0 ? (
-          <p className="text-sm text-neutral-500">Nenhum professor cadastrado.</p>
+          <EmptyState message="Nenhum professor cadastrado." />
         ) : (
           <div className="overflow-x-auto rounded-2xl border border-neutral-200 bg-white shadow-sm">
             <table className="w-full min-w-[620px] text-left text-sm">

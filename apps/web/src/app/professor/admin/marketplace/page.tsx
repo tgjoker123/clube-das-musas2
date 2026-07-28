@@ -3,6 +3,7 @@
 import { useEffect, useState } from "react";
 import { api } from "@/lib/api";
 import { BackLink } from "@/components/back-link";
+import { EmptyState, IconBadge, Icon, ICONS } from "@/components/empty-state";
 
 interface Parceiro {
   id: string;
@@ -110,7 +111,8 @@ export default function MarketplaceAdminPage() {
       )}
 
       {mostrarForm && (
-        <form onSubmit={handleCreate} className="app-card animate-fade-in-up max-w-md space-y-3">
+        <form onSubmit={handleCreate} className="app-card animate-fade-in-up max-w-lg space-y-4">
+          <h2 className="app-h2">Novo item</h2>
           <select
             value={parceiroId}
             onChange={(e) => setParceiroId(e.target.value)}
@@ -124,28 +126,30 @@ export default function MarketplaceAdminPage() {
               </option>
             ))}
           </select>
-          <input
-            type="text"
-            placeholder="Nome do item/serviço"
-            required
-            value={nome}
-            onChange={(e) => setNome(e.target.value)}
-            className="app-input"
-          />
+          <div className="grid gap-3 sm:grid-cols-2">
+            <input
+              type="text"
+              placeholder="Nome do item/serviço"
+              required
+              value={nome}
+              onChange={(e) => setNome(e.target.value)}
+              className="app-input"
+            />
+            <input
+              type="number"
+              step="0.01"
+              min="0"
+              placeholder="Preço (R$)"
+              required
+              value={preco}
+              onChange={(e) => setPreco(e.target.value)}
+              className="app-input"
+            />
+          </div>
           <textarea
             placeholder="Descrição (opcional)"
             value={descricao}
             onChange={(e) => setDescricao(e.target.value)}
-            className="app-input"
-          />
-          <input
-            type="number"
-            step="0.01"
-            min="0"
-            placeholder="Preço (R$)"
-            required
-            value={preco}
-            onChange={(e) => setPreco(e.target.value)}
             className="app-input"
           />
           <button
@@ -161,15 +165,23 @@ export default function MarketplaceAdminPage() {
       {erro && <p className="text-red-600">{erro}</p>}
 
       {itens.length === 0 ? (
-        <p className="text-neutral-500">Nenhum item cadastrado no marketplace.</p>
+        <EmptyState message="Nenhum item cadastrado no marketplace." />
       ) : (
         <ul className="grid gap-3 sm:grid-cols-2">
           {itens.map((item) => (
             <li key={item.id} className="app-card space-y-1">
-              <div className="flex items-start justify-between">
-                <p className="font-medium text-neutral-900">{item.nome}</p>
+              <div className="flex items-start justify-between gap-2">
+                <div className="flex items-start gap-3">
+                  <IconBadge>
+                    <Icon path={ICONS.estrela} />
+                  </IconBadge>
+                  <div>
+                    <p className="font-medium text-neutral-900">{item.nome}</p>
+                    <p className="text-xs text-neutral-400">{item.parceiro.nome}</p>
+                  </div>
+                </div>
                 <span
-                  className={`rounded-full px-2 py-0.5 text-xs font-medium ${
+                  className={`shrink-0 rounded-full px-2 py-0.5 text-xs font-medium ${
                     item.status === "ativo"
                       ? "bg-emerald-100 text-emerald-700"
                       : "bg-neutral-100 text-neutral-500"
@@ -178,7 +190,6 @@ export default function MarketplaceAdminPage() {
                   {item.status}
                 </span>
               </div>
-              <p className="text-xs text-neutral-400">{item.parceiro.nome}</p>
               {item.descricao && <p className="text-sm text-neutral-600">{item.descricao}</p>}
               <p className="font-brand text-lg text-[color:var(--color-gold-dark)]">
                 {formatarReais(Number(item.preco))}

@@ -3,6 +3,7 @@
 import { useEffect, useState } from "react";
 import { api } from "@/lib/api";
 import { BackLink } from "@/components/back-link";
+import { EmptyState } from "@/components/empty-state";
 
 interface ProfessorRow {
   id: string;
@@ -104,40 +105,43 @@ export default function ProfessoresAdminPage() {
       </div>
 
       {mostrarForm && (
-        <form onSubmit={handleCreate} className="app-card animate-fade-in-up max-w-md space-y-3">
-          <input
-            type="text"
-            placeholder="Nome"
-            required
-            value={nome}
-            onChange={(e) => setNome(e.target.value)}
-            className="app-input"
-          />
-          <input
-            type="email"
-            placeholder="E-mail"
-            required
-            value={email}
-            onChange={(e) => setEmail(e.target.value)}
-            className="app-input"
-          />
-          <input
-            type="text"
-            placeholder="WhatsApp (opcional, com DDD)"
-            value={telefone}
-            onChange={(e) => setTelefone(e.target.value)}
-            className="app-input"
-          />
-          <input
-            type="number"
-            step="0.01"
-            min="0"
-            max="100"
-            placeholder="% de comissão por aluna"
-            value={percentual}
-            onChange={(e) => setPercentual(e.target.value)}
-            className="app-input"
-          />
+        <form onSubmit={handleCreate} className="app-card animate-fade-in-up max-w-lg space-y-4">
+          <h2 className="app-h2">Novo professor</h2>
+          <div className="grid gap-3 sm:grid-cols-2">
+            <input
+              type="text"
+              placeholder="Nome"
+              required
+              value={nome}
+              onChange={(e) => setNome(e.target.value)}
+              className="app-input"
+            />
+            <input
+              type="email"
+              placeholder="E-mail"
+              required
+              value={email}
+              onChange={(e) => setEmail(e.target.value)}
+              className="app-input"
+            />
+            <input
+              type="text"
+              placeholder="WhatsApp (opcional, com DDD)"
+              value={telefone}
+              onChange={(e) => setTelefone(e.target.value)}
+              className="app-input"
+            />
+            <input
+              type="number"
+              step="0.01"
+              min="0"
+              max="100"
+              placeholder="% de comissão por aluna"
+              value={percentual}
+              onChange={(e) => setPercentual(e.target.value)}
+              className="app-input"
+            />
+          </div>
           <button
             type="submit"
             disabled={salvando}
@@ -175,10 +179,24 @@ export default function ProfessoresAdminPage() {
                     {p.percentualComissao ? `${p.percentualComissao}%` : "Definir"}
                   </button>
                 </td>
-                <td className="px-4 py-3 text-neutral-600">
-                  {p.authUserId ? "Ativo" : "Pendente"}
+                <td className="px-4 py-3">
+                  <span
+                    className={`rounded-full px-2.5 py-0.5 text-xs font-medium ${
+                      p.authUserId
+                        ? "bg-emerald-100 text-emerald-700"
+                        : "bg-neutral-100 text-neutral-600"
+                    }`}
+                  >
+                    {p.authUserId ? "Ativo" : "Pendente"}
+                  </span>
                 </td>
-                <td className="px-4 py-3 text-neutral-600">{p.isAdmin ? "Sim" : "Não"}</td>
+                <td className="px-4 py-3">
+                  {p.isAdmin && (
+                    <span className="rounded-full bg-[color:var(--color-gold)]/15 px-2.5 py-0.5 text-xs font-medium text-[color:var(--color-gold-dark)]">
+                      Admin
+                    </span>
+                  )}
+                </td>
                 <td className="px-4 py-3">
                   <div className="flex items-center justify-end gap-2 text-xs font-medium">
                     {!p.authUserId && p.telefone && (
@@ -198,8 +216,8 @@ export default function ProfessoresAdminPage() {
             ))}
             {professores.length === 0 && (
               <tr>
-                <td colSpan={6} className="px-4 py-6 text-center text-neutral-500">
-                  Nenhum professor cadastrado.
+                <td colSpan={6} className="px-4 py-6">
+                  <EmptyState message="Nenhum professor cadastrado." />
                 </td>
               </tr>
             )}

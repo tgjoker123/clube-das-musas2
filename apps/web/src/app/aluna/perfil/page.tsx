@@ -3,6 +3,7 @@
 import { useEffect, useState } from "react";
 import { api } from "@/lib/api";
 import { createClient } from "@/lib/supabase/client";
+import { EmptyState, IconBadge, Icon, ICONS } from "@/components/empty-state";
 
 interface Anamnese {
   id: string;
@@ -121,47 +122,66 @@ export default function PerfilAlunaPage() {
         {senhaAlterada && <p className="text-xs text-emerald-600">Senha alterada com sucesso.</p>}
       </section>
 
-      <section className="app-card animate-fade-in-up stagger-1 space-y-2">
+      <section className="app-card animate-fade-in-up stagger-1 space-y-3">
         <h2 className="app-h2">Evolução física</h2>
         {perfil.evolucoes.length === 0 ? (
-          <p className="text-sm text-neutral-500">Nenhum registro ainda.</p>
+          <EmptyState message="Nenhum registro ainda." />
         ) : (
-          <ul className="space-y-1 text-sm text-neutral-700">
+          <ul className="space-y-2">
             {perfil.evolucoes.map((ev) => (
-              <li key={ev.id}>
-                {new Date(ev.data).toLocaleDateString("pt-BR")}
-                {ev.peso ? ` — ${ev.peso} kg` : ""}
+              <li key={ev.id} className="flex items-center gap-3 rounded-xl bg-neutral-50 p-3">
+                <IconBadge size={8}>
+                  <Icon size={15} path={ICONS.evolucao} />
+                </IconBadge>
+                <div className="text-sm">
+                  <p className="text-neutral-900">
+                    {new Date(ev.data).toLocaleDateString("pt-BR")}
+                  </p>
+                  {ev.peso && <p className="text-xs text-neutral-500">{ev.peso} kg</p>}
+                </div>
               </li>
             ))}
           </ul>
         )}
       </section>
 
-      <section className="app-card animate-fade-in-up stagger-2 space-y-2">
+      <section className="app-card animate-fade-in-up stagger-2 space-y-3">
         <h2 className="app-h2">Exames de sangue</h2>
         {perfil.exames.length === 0 ? (
-          <p className="text-sm text-neutral-500">Nenhum exame registrado ainda.</p>
+          <EmptyState message="Nenhum exame registrado ainda." />
         ) : (
-          <ul className="space-y-1 text-sm text-neutral-700">
+          <ul className="space-y-2">
             {perfil.exames.map((ex) => (
-              <li key={ex.id}>{new Date(ex.dataExame).toLocaleDateString("pt-BR")}</li>
+              <li key={ex.id} className="flex items-center gap-3 rounded-xl bg-neutral-50 p-3">
+                <IconBadge size={8}>
+                  <Icon size={15} path={ICONS.exame} />
+                </IconBadge>
+                <p className="text-sm text-neutral-900">
+                  {new Date(ex.dataExame).toLocaleDateString("pt-BR")}
+                </p>
+              </li>
             ))}
           </ul>
         )}
       </section>
 
-      <section className="app-card animate-fade-in-up stagger-3 space-y-2">
+      <section className="app-card animate-fade-in-up stagger-3 space-y-3">
         <h2 className="app-h2">Anamnese</h2>
         {perfil.anamneses.length === 0 ? (
-          <p className="text-sm text-neutral-500">Nenhuma anamnese registrada ainda.</p>
+          <EmptyState message="Nenhuma anamnese registrada ainda." />
         ) : (
           <ul className="space-y-2 text-sm">
             {perfil.anamneses.map((a) => (
-              <li key={a.id} className="rounded-lg bg-neutral-50 p-3">
-                <p className="text-xs text-neutral-500">
-                  {new Date(a.data).toLocaleDateString("pt-BR")}
-                </p>
-                <p className="text-neutral-700">{a.respostasJson.texto}</p>
+              <li key={a.id} className="flex gap-3 rounded-xl bg-neutral-50 p-3">
+                <IconBadge size={8}>
+                  <Icon size={15} path={ICONS.nota} />
+                </IconBadge>
+                <div>
+                  <p className="text-xs text-neutral-500">
+                    {new Date(a.data).toLocaleDateString("pt-BR")}
+                  </p>
+                  <p className="text-neutral-700">{a.respostasJson.texto}</p>
+                </div>
               </li>
             ))}
           </ul>

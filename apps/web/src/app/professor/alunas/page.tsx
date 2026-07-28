@@ -3,6 +3,21 @@
 import { useEffect, useMemo, useState } from "react";
 import Link from "next/link";
 import { api } from "@/lib/api";
+import { EmptyState } from "@/components/empty-state";
+
+const STATUS_ESTILO: Record<Aluna["status"], string> = {
+  ativa: "bg-emerald-100 text-emerald-700",
+  suspensa: "bg-amber-100 text-amber-700",
+  inadimplente: "bg-red-100 text-red-700",
+};
+
+function StatusBadge({ status }: { status: Aluna["status"] }) {
+  return (
+    <span className={`rounded-full px-2.5 py-0.5 text-xs font-medium capitalize ${STATUS_ESTILO[status]}`}>
+      {status}
+    </span>
+  );
+}
 
 interface Aluna {
   id: string;
@@ -125,37 +140,40 @@ export default function AlunasPage() {
       </div>
 
       {mostrarForm && (
-        <form onSubmit={handleCreate} className="app-card animate-fade-in-up max-w-md space-y-3">
-          <input
-            type="text"
-            placeholder="Nome"
-            required
-            value={nome}
-            onChange={(e) => setNome(e.target.value)}
-            className="app-input"
-          />
-          <input
-            type="email"
-            placeholder="E-mail"
-            required
-            value={email}
-            onChange={(e) => setEmail(e.target.value)}
-            className="app-input"
-          />
-          <input
-            type="text"
-            placeholder="WhatsApp (opcional, com DDD)"
-            value={telefone}
-            onChange={(e) => setTelefone(e.target.value)}
-            className="app-input"
-          />
-          <input
-            type="date"
-            required
-            value={dataNascimento}
-            onChange={(e) => setDataNascimento(e.target.value)}
-            className="app-input"
-          />
+        <form onSubmit={handleCreate} className="app-card animate-fade-in-up max-w-lg space-y-4">
+          <h2 className="app-h2">Nova aluna</h2>
+          <div className="grid gap-3 sm:grid-cols-2">
+            <input
+              type="text"
+              placeholder="Nome"
+              required
+              value={nome}
+              onChange={(e) => setNome(e.target.value)}
+              className="app-input"
+            />
+            <input
+              type="email"
+              placeholder="E-mail"
+              required
+              value={email}
+              onChange={(e) => setEmail(e.target.value)}
+              className="app-input"
+            />
+            <input
+              type="text"
+              placeholder="WhatsApp (opcional, com DDD)"
+              value={telefone}
+              onChange={(e) => setTelefone(e.target.value)}
+              className="app-input"
+            />
+            <input
+              type="date"
+              required
+              value={dataNascimento}
+              onChange={(e) => setDataNascimento(e.target.value)}
+              className="app-input"
+            />
+          </div>
           <button
             type="submit"
             disabled={salvando}
@@ -200,9 +218,19 @@ export default function AlunasPage() {
                   </Link>
                 </td>
                 <td className="px-4 py-3 text-neutral-600">{a.email}</td>
-                <td className="px-4 py-3 text-neutral-600">{a.status}</td>
-                <td className="px-4 py-3 text-neutral-600">
-                  {a.authUserId ? "Ativo" : "Pendente"}
+                <td className="px-4 py-3">
+                  <StatusBadge status={a.status} />
+                </td>
+                <td className="px-4 py-3">
+                  <span
+                    className={`rounded-full px-2.5 py-0.5 text-xs font-medium ${
+                      a.authUserId
+                        ? "bg-emerald-100 text-emerald-700"
+                        : "bg-neutral-100 text-neutral-600"
+                    }`}
+                  >
+                    {a.authUserId ? "Ativo" : "Pendente"}
+                  </span>
                 </td>
                 <td className="px-4 py-3">
                   <div className="flex items-center justify-end gap-2 text-xs font-medium">
@@ -253,8 +281,8 @@ export default function AlunasPage() {
             ))}
             {alunasFiltradas.length === 0 && (
               <tr>
-                <td colSpan={5} className="px-4 py-6 text-center text-neutral-500">
-                  Nenhuma aluna encontrada.
+                <td colSpan={5} className="px-4 py-6">
+                  <EmptyState message="Nenhuma aluna encontrada." />
                 </td>
               </tr>
             )}

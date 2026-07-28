@@ -3,6 +3,7 @@
 import { useEffect, useState } from "react";
 import { api } from "@/lib/api";
 import { BackLink } from "@/components/back-link";
+import { EmptyState, IconBadge, Icon, ICONS } from "@/components/empty-state";
 
 interface Parceiro {
   id: string;
@@ -92,39 +93,42 @@ export default function ParceirosAdminPage() {
       </div>
 
       {mostrarForm && (
-        <form onSubmit={handleCreate} className="app-card animate-fade-in-up max-w-md space-y-3">
-          <input
-            type="text"
-            placeholder="Nome do parceiro"
-            required
-            value={nome}
-            onChange={(e) => setNome(e.target.value)}
-            className="app-input"
-          />
-          <input
-            type="text"
-            placeholder="Categoria (ex: nutrição, suplementos)"
-            value={categoria}
-            onChange={(e) => setCategoria(e.target.value)}
-            className="app-input"
-          />
-          <input
-            type="text"
-            placeholder="Contato (e-mail ou telefone)"
-            value={contato}
-            onChange={(e) => setContato(e.target.value)}
-            className="app-input"
-          />
-          <input
-            type="number"
-            step="0.01"
-            min="0"
-            max="100"
-            placeholder="% de comissão do parceiro"
-            value={comissao}
-            onChange={(e) => setComissao(e.target.value)}
-            className="app-input"
-          />
+        <form onSubmit={handleCreate} className="app-card animate-fade-in-up max-w-lg space-y-4">
+          <h2 className="app-h2">Novo parceiro</h2>
+          <div className="grid gap-3 sm:grid-cols-2">
+            <input
+              type="text"
+              placeholder="Nome do parceiro"
+              required
+              value={nome}
+              onChange={(e) => setNome(e.target.value)}
+              className="app-input"
+            />
+            <input
+              type="text"
+              placeholder="Categoria (ex: nutrição, suplementos)"
+              value={categoria}
+              onChange={(e) => setCategoria(e.target.value)}
+              className="app-input"
+            />
+            <input
+              type="text"
+              placeholder="Contato (e-mail ou telefone)"
+              value={contato}
+              onChange={(e) => setContato(e.target.value)}
+              className="app-input"
+            />
+            <input
+              type="number"
+              step="0.01"
+              min="0"
+              max="100"
+              placeholder="% de comissão do parceiro"
+              value={comissao}
+              onChange={(e) => setComissao(e.target.value)}
+              className="app-input"
+            />
+          </div>
           <button
             type="submit"
             disabled={salvando}
@@ -138,15 +142,24 @@ export default function ParceirosAdminPage() {
       {erro && <p className="text-red-600">{erro}</p>}
 
       {parceiros.length === 0 ? (
-        <p className="text-neutral-500">Nenhum parceiro cadastrado.</p>
+        <EmptyState message="Nenhum parceiro cadastrado." />
       ) : (
         <ul className="grid gap-3 sm:grid-cols-2">
           {parceiros.map((p) => (
             <li key={p.id} className="app-card space-y-1">
-              <div className="flex items-start justify-between">
-                <p className="font-medium text-neutral-900">{p.nome}</p>
+              <div className="flex items-start justify-between gap-2">
+                <div className="flex items-start gap-3">
+                  <IconBadge>
+                    <Icon path={ICONS.loja} />
+                  </IconBadge>
+                  <div>
+                    <p className="font-medium text-neutral-900">{p.nome}</p>
+                    {p.categoria && <p className="text-sm text-neutral-500">{p.categoria}</p>}
+                    {p.contato && <p className="text-sm text-neutral-500">{p.contato}</p>}
+                  </div>
+                </div>
                 <span
-                  className={`rounded-full px-2 py-0.5 text-xs font-medium ${
+                  className={`shrink-0 rounded-full px-2 py-0.5 text-xs font-medium ${
                     p.status === "ativo"
                       ? "bg-emerald-100 text-emerald-700"
                       : "bg-neutral-100 text-neutral-500"
@@ -155,8 +168,6 @@ export default function ParceirosAdminPage() {
                   {p.status}
                 </span>
               </div>
-              {p.categoria && <p className="text-sm text-neutral-500">{p.categoria}</p>}
-              {p.contato && <p className="text-sm text-neutral-500">{p.contato}</p>}
               <p className="text-xs text-neutral-400">
                 {p.comissaoPercentual ? `${p.comissaoPercentual}% de comissão` : "Sem comissão definida"}{" "}
                 · {p.itens.length} item(ns) no marketplace

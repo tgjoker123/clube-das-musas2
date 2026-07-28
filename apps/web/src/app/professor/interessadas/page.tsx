@@ -2,6 +2,7 @@
 
 import { useEffect, useState } from "react";
 import { api } from "@/lib/api";
+import { EmptyState, IconBadge, Icon, ICONS } from "@/components/empty-state";
 
 interface Lead {
   id: string;
@@ -60,16 +61,21 @@ function LeadCard({
   return (
     <li className={`app-card ${className ?? ""}`}>
       <div className="flex items-start justify-between gap-2">
-        <div>
-          <p className="font-medium text-neutral-900">{lead.nome}</p>
-          <p className="text-sm text-neutral-500">{lead.email}</p>
-          <p className="text-sm text-neutral-500">{lead.telefone}</p>
-          {lead.mensagem && (
-            <p className="mt-2 text-sm text-neutral-600">&ldquo;{lead.mensagem}&rdquo;</p>
-          )}
-          <p className="mt-2 text-xs text-neutral-400">
-            {new Date(lead.createdAt).toLocaleDateString("pt-BR")}
-          </p>
+        <div className="flex items-start gap-3">
+          <IconBadge>
+            <Icon path={ICONS.pessoa} />
+          </IconBadge>
+          <div>
+            <p className="font-medium text-neutral-900">{lead.nome}</p>
+            <p className="text-sm text-neutral-500">{lead.email}</p>
+            <p className="text-sm text-neutral-500">{lead.telefone}</p>
+            {lead.mensagem && (
+              <p className="mt-2 text-sm text-neutral-600">&ldquo;{lead.mensagem}&rdquo;</p>
+            )}
+            <p className="mt-2 text-xs text-neutral-400">
+              {new Date(lead.createdAt).toLocaleDateString("pt-BR")}
+            </p>
+          </div>
         </div>
         {!cadastrando && (
           <button
@@ -145,7 +151,7 @@ export default function InteressadasPage() {
       {erro && <p className="text-red-600">{erro}</p>}
 
       {leads.length === 0 ? (
-        <p className="text-neutral-500">Nenhuma interessada ainda.</p>
+        <EmptyState message="Nenhuma interessada ainda." />
       ) : (
         <ul className="grid gap-3 sm:grid-cols-2">
           {leads.map((lead, i) => (

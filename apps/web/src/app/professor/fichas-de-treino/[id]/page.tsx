@@ -3,6 +3,7 @@
 import { use, useEffect, useState } from "react";
 import { api } from "@/lib/api";
 import { BackLink } from "@/components/back-link";
+import { EmptyState, IconBadge, Icon, ICONS } from "@/components/empty-state";
 
 interface Exercicio {
   id: string;
@@ -102,22 +103,37 @@ export default function FichaDetalhePage({ params }: { params: Promise<{ id: str
 
       <section className="app-card animate-fade-in-up stagger-1 space-y-3">
         <h2 className="app-h2">Exercícios da ficha</h2>
-        <ul className="space-y-1 text-sm text-neutral-700">
-          {ficha.itens.map((item) => (
-            <li key={item.id} className="flex items-center justify-between gap-2">
-              <span>
-                {item.exercicio.nome} — {item.series}x{item.reps}
-                {item.carga ? ` (${item.carga})` : ""}
-              </span>
-              <button
-                onClick={() => handleRemoveItem(item.id)}
-                className="-m-2 shrink-0 p-2 text-xs text-neutral-400 hover:text-red-600"
+        {ficha.itens.length === 0 ? (
+          <EmptyState message="Nenhum exercício adicionado ainda." />
+        ) : (
+          <ul className="space-y-2">
+            {ficha.itens.map((item) => (
+              <li
+                key={item.id}
+                className="flex items-center justify-between gap-2 rounded-xl bg-neutral-50 p-3"
               >
-                Remover
-              </button>
-            </li>
-          ))}
-        </ul>
+                <div className="flex items-center gap-3">
+                  <IconBadge size={8}>
+                    <Icon size={15} path={ICONS.treino} />
+                  </IconBadge>
+                  <div className="text-sm">
+                    <p className="text-neutral-900">{item.exercicio.nome}</p>
+                    <span className="mt-0.5 inline-block rounded-full bg-white px-2 py-0.5 text-xs font-medium text-neutral-600">
+                      {item.series}x{item.reps}
+                      {item.carga ? ` (${item.carga})` : ""}
+                    </span>
+                  </div>
+                </div>
+                <button
+                  onClick={() => handleRemoveItem(item.id)}
+                  className="-m-2 shrink-0 p-2 text-xs text-neutral-400 hover:text-red-600"
+                >
+                  Remover
+                </button>
+              </li>
+            ))}
+          </ul>
+        )}
         <form onSubmit={handleAddItem} className="flex flex-wrap items-center gap-2">
           <select
             value={exercicioId}
@@ -160,11 +176,20 @@ export default function FichaDetalhePage({ params }: { params: Promise<{ id: str
 
       <section className="app-card animate-fade-in-up stagger-2 space-y-3">
         <h2 className="app-h2">Alunas associadas</h2>
-        <ul className="space-y-1 text-sm text-neutral-700">
-          {ficha.alunas.map(({ aluna }) => (
-            <li key={aluna.id}>{aluna.nome}</li>
-          ))}
-        </ul>
+        {ficha.alunas.length === 0 ? (
+          <EmptyState message="Nenhuma aluna associada ainda." />
+        ) : (
+          <ul className="space-y-2">
+            {ficha.alunas.map(({ aluna }) => (
+              <li key={aluna.id} className="flex items-center gap-3 rounded-xl bg-neutral-50 p-3">
+                <IconBadge size={8}>
+                  <Icon size={15} path={ICONS.pessoa} />
+                </IconBadge>
+                <p className="text-sm text-neutral-900">{aluna.nome}</p>
+              </li>
+            ))}
+          </ul>
+        )}
         <form onSubmit={handleAssociar} className="flex flex-wrap items-center gap-2">
           <select
             value={alunaId}
