@@ -62,10 +62,43 @@ function ExercicioCard({
   if (!editando) {
     return (
       <li className={`app-card ${className ?? ""}`}>
-        <div className="flex items-start justify-between gap-2">
-          <div>
-            <p className="font-medium text-neutral-900">{exercicio.nome}</p>
-            <p className="text-sm text-neutral-500">{exercicio.grupoMuscular}</p>
+        <div className="flex items-start justify-between gap-3">
+          <div className="flex items-start gap-3">
+            <span className="mt-0.5 flex h-10 w-10 shrink-0 items-center justify-center rounded-full border border-[color:var(--color-gold)]/30 bg-[color:var(--color-gold)]/10">
+              <svg
+                width="18"
+                height="18"
+                viewBox="0 0 24 24"
+                fill="none"
+                stroke="var(--color-gold-dark)"
+                strokeWidth="1.8"
+                strokeLinecap="round"
+                strokeLinejoin="round"
+              >
+                <path d="M6.5 6.5 17.5 17.5M4 4l3 3M20 20l-3-3M8.5 4 4 8.5M15.5 20 20 15.5M2 6l4-4M18 22l4-4" />
+              </svg>
+            </span>
+            <div>
+              <p className="font-medium text-neutral-900">{exercicio.nome}</p>
+              <span className="mt-1 inline-block rounded-full bg-neutral-100 px-2.5 py-0.5 text-xs font-medium text-neutral-600">
+                {exercicio.grupoMuscular}
+              </span>
+              {exercicio.videoUrl && (
+                <a
+                  href={exercicio.videoUrl}
+                  target="_blank"
+                  rel="noreferrer"
+                  className="ml-2 mt-1 inline-flex items-center gap-1 text-xs font-medium text-[color:var(--color-gold-dark)] hover:underline"
+                >
+                  ▶ Vídeo
+                </a>
+              )}
+              {exercicio.instrucoes && (
+                <p className="mt-1.5 text-xs leading-relaxed text-neutral-500">
+                  {exercicio.instrucoes}
+                </p>
+              )}
+            </div>
           </div>
           <div className="flex shrink-0 gap-1 text-xs font-medium">
             <button onClick={() => setEditando(true)} className="app-link-gold -m-2 p-2">
@@ -191,32 +224,35 @@ export default function ExerciciosPage() {
         Biblioteca de exercícios
       </h1>
 
-      <form onSubmit={handleCreate} className="app-card animate-fade-in-up max-w-md space-y-3">
-        <input
-          type="text"
-          placeholder="Nome do exercício"
-          required
-          value={nome}
-          onChange={(e) => setNome(e.target.value)}
-          className="app-input"
-        />
-        <input
-          type="text"
-          placeholder="Grupo muscular"
-          required
-          value={grupoMuscular}
-          onChange={(e) => setGrupoMuscular(e.target.value)}
-          className="app-input"
-        />
+      <form onSubmit={handleCreate} className="app-card animate-fade-in-up max-w-lg space-y-4">
+        <h2 className="app-h2">Novo exercício</h2>
+        <div className="grid gap-3 sm:grid-cols-2">
+          <input
+            type="text"
+            placeholder="Nome do exercício"
+            required
+            value={nome}
+            onChange={(e) => setNome(e.target.value)}
+            className="app-input"
+          />
+          <input
+            type="text"
+            placeholder="Grupo muscular"
+            required
+            value={grupoMuscular}
+            onChange={(e) => setGrupoMuscular(e.target.value)}
+            className="app-input"
+          />
+        </div>
         <input
           type="url"
-          placeholder="URL do vídeo demonstrativo"
+          placeholder="URL do vídeo demonstrativo (opcional)"
           value={videoUrl}
           onChange={(e) => setVideoUrl(e.target.value)}
           className="app-input"
         />
         <textarea
-          placeholder="Instruções"
+          placeholder="Instruções (opcional)"
           value={instrucoes}
           onChange={(e) => setInstrucoes(e.target.value)}
           className="app-input"
