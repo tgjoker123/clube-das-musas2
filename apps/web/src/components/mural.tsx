@@ -24,7 +24,7 @@ export function Mural() {
 
   return (
     <div className="app-card animate-fade-in-up space-y-3">
-      <h2 className="app-h2">📣 Recados da professora</h2>
+      <h2 className="app-h2">📣 Recados do professor</h2>
       <ul className="space-y-3">
         {recados.slice(0, 5).map((r) => (
           <li key={r.id} className="border-l-2 border-[color:var(--color-gold)]/50 pl-3">

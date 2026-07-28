@@ -13,7 +13,7 @@ interface WhoAmI {
 
 export default function LoginPage() {
   const router = useRouter();
-  const [area, setArea] = useState<"aluna" | "professora">("aluna");
+  const [area, setArea] = useState<"aluna" | "professor">("aluna");
   const [email, setEmail] = useState("");
   const [senha, setSenha] = useState("");
   const [erro, setErro] = useState<string | null>(null);
@@ -29,6 +29,17 @@ export default function LoginPage() {
       if (error) throw error;
 
       const me = await api.get<WhoAmI>("/auth/me");
+
+      if (me.role !== area) {
+        await supabase.auth.signOut();
+        setErro(
+          me.role === "professor"
+            ? "Essa conta é de professor. Selecione \"Área do Professor\" para entrar."
+            : "Essa conta é de aluna. Selecione \"Área da Aluna\" para entrar.",
+        );
+        return;
+      }
+
       router.push(me.role === "professor" ? "/professor/dashboard" : "/aluna/treino");
     } catch (err) {
       setErro(err instanceof Error ? err.message : "Falha ao entrar");
@@ -64,14 +75,14 @@ export default function LoginPage() {
           </button>
           <button
             type="button"
-            onClick={() => setArea("professora")}
+            onClick={() => setArea("professor")}
             className={`flex-1 rounded-full py-2 font-medium transition-colors ${
-              area === "professora"
+              area === "professor"
                 ? "gold-button"
                 : "text-white/50 hover:text-white"
             }`}
           >
-            Área da Professora
+            Área do Professor
           </button>
         </div>
 

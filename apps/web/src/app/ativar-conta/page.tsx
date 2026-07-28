@@ -55,7 +55,7 @@ function AtivarContaForm() {
       </h1>
       <p className="mt-2 text-center text-sm text-white/50">
         {tipo === "professor"
-          ? "Defina uma senha para acessar seu painel de professora."
+          ? "Defina uma senha para acessar seu painel de professor."
           : "Defina uma senha para acessar seus treinos."}
       </p>
 
