@@ -1,4 +1,4 @@
-import { Body, Controller, Get, Post, UseGuards } from "@nestjs/common";
+import { Body, Controller, Delete, Get, Param, Post, UseGuards } from "@nestjs/common";
 import { SupabaseAuthGuard } from "../../core/auth/supabase-auth.guard";
 import { RolesGuard } from "../../core/auth/roles.guard";
 import { Roles } from "../../core/auth/roles.decorator";
@@ -28,5 +28,11 @@ export class RecadosController {
   @Roles("aluna")
   listMine(@CurrentUser() user: CurrentUserType) {
     return this.recadosService.listForAluna(user.alunaId!);
+  }
+
+  @Delete(":id")
+  @Roles("professor")
+  remove(@CurrentUser() user: CurrentUserType, @Param("id") id: string) {
+    return this.recadosService.remove(user.professorId!, id);
   }
 }

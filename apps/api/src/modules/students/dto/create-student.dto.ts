@@ -18,4 +18,8 @@ export class CreateStudentDto {
   @IsOptional()
   @IsString()
   telefone?: string;
+
+  @IsOptional()
+  @IsString()
+  cpf?: string;
 }

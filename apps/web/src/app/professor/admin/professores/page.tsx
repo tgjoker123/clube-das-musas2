@@ -23,6 +23,7 @@ export default function ProfessoresAdminPage() {
   const [mostrarForm, setMostrarForm] = useState(false);
   const [nome, setNome] = useState("");
   const [email, setEmail] = useState("");
+  const [cpf, setCpf] = useState("");
   const [telefone, setTelefone] = useState("");
   const [percentual, setPercentual] = useState("");
   const [salvando, setSalvando] = useState(false);
@@ -44,11 +45,13 @@ export default function ProfessoresAdminPage() {
       await api.post("/admin/professors", {
         nome,
         email,
+        cpf: cpf || undefined,
         telefone: telefone || undefined,
         percentualComissao: percentual ? Number(percentual) : undefined,
       });
       setNome("");
       setEmail("");
+      setCpf("");
       setTelefone("");
       setPercentual("");
       setMostrarForm(false);
@@ -122,6 +125,13 @@ export default function ProfessoresAdminPage() {
               required
               value={email}
               onChange={(e) => setEmail(e.target.value)}
+              className="app-input"
+            />
+            <input
+              type="text"
+              placeholder="CPF (opcional)"
+              value={cpf}
+              onChange={(e) => setCpf(e.target.value)}
               className="app-input"
             />
             <input

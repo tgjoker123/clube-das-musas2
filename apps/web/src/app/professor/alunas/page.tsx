@@ -55,6 +55,7 @@ export default function AlunasPage() {
   const [mostrarForm, setMostrarForm] = useState(false);
   const [nome, setNome] = useState("");
   const [email, setEmail] = useState("");
+  const [cpf, setCpf] = useState("");
   const [telefone, setTelefone] = useState("");
   const [dataNascimento, setDataNascimento] = useState("");
   const [salvando, setSalvando] = useState(false);
@@ -81,9 +82,16 @@ export default function AlunasPage() {
     setSalvando(true);
     setErro(null);
     try {
-      await api.post("/students", { nome, email, telefone: telefone || undefined, dataNascimento });
+      await api.post("/students", {
+        nome,
+        email,
+        cpf: cpf || undefined,
+        telefone: telefone || undefined,
+        dataNascimento,
+      });
       setNome("");
       setEmail("");
+      setCpf("");
       setTelefone("");
       setDataNascimento("");
       setMostrarForm(false);
@@ -157,6 +165,13 @@ export default function AlunasPage() {
               required
               value={email}
               onChange={(e) => setEmail(e.target.value)}
+              className="app-input"
+            />
+            <input
+              type="text"
+              placeholder="CPF (opcional)"
+              value={cpf}
+              onChange={(e) => setCpf(e.target.value)}
               className="app-input"
             />
             <input

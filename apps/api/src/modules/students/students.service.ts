@@ -9,6 +9,7 @@ import type { SupabaseClient } from "@supabase/supabase-js";
 import { PrismaService } from "../../core/database/prisma.service";
 import { SUPABASE_ADMIN_CLIENT } from "../../core/supabase/supabase.module";
 import { buildWhatsAppLink } from "../../core/utils/whatsapp";
+import { sanitizeCpf } from "../../core/utils/cpf";
 import type { AuthUser } from "../../core/auth/supabase-token.guard";
 import type { CreateStudentDto } from "./dto/create-student.dto";
 import type { UpdateStudentDto } from "./dto/update-student.dto";
@@ -38,6 +39,7 @@ export class StudentsService {
         professorId,
         nome: dto.nome,
         email: dto.email,
+        cpf: dto.cpf ? sanitizeCpf(dto.cpf) : undefined,
         telefone: dto.telefone,
         dataNascimento: new Date(dto.dataNascimento),
         observacoes: dto.observacoes,
@@ -84,6 +86,7 @@ export class StudentsService {
         ...(dto.observacoes !== undefined ? { observacoes: dto.observacoes } : {}),
         ...(dto.fotoUrl !== undefined ? { fotoUrl: dto.fotoUrl } : {}),
         ...(dto.telefone !== undefined ? { telefone: dto.telefone } : {}),
+        ...(dto.cpf !== undefined ? { cpf: sanitizeCpf(dto.cpf) } : {}),
       },
     });
   }

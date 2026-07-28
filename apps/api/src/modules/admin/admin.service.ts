@@ -3,6 +3,7 @@ import type { SupabaseClient } from "@supabase/supabase-js";
 import { PrismaService } from "../../core/database/prisma.service";
 import { SUPABASE_ADMIN_CLIENT } from "../../core/supabase/supabase.module";
 import { buildWhatsAppLink } from "../../core/utils/whatsapp";
+import { sanitizeCpf } from "../../core/utils/cpf";
 import type { CreateProfessorDto } from "./dto/create-professor.dto";
 import type { UpdateProfessorAdminDto } from "./dto/update-professor-admin.dto";
 import type { CreateParceiroDto } from "./dto/create-parceiro.dto";
@@ -28,6 +29,7 @@ export class AdminService {
         id: true,
         nome: true,
         email: true,
+        cpf: true,
         status: true,
         isAdmin: true,
         authUserId: true,
@@ -61,6 +63,7 @@ export class AdminService {
       data: {
         nome: dto.nome,
         email: dto.email,
+        cpf: dto.cpf ? sanitizeCpf(dto.cpf) : undefined,
         telefone: dto.telefone,
         percentualComissao: dto.percentualComissao,
       },
@@ -113,6 +116,7 @@ export class AdminService {
           : {}),
         ...(dto.status !== undefined ? { status: dto.status } : {}),
         ...(dto.telefone !== undefined ? { telefone: dto.telefone } : {}),
+        ...(dto.cpf !== undefined ? { cpf: sanitizeCpf(dto.cpf) } : {}),
       },
     });
   }

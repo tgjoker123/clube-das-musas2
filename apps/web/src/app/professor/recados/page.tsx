@@ -2,6 +2,7 @@
 
 import { useEffect, useState } from "react";
 import { api } from "@/lib/api";
+import { EmptyState } from "@/components/empty-state";
 
 interface Aluna {
   id: string;
@@ -24,6 +25,8 @@ export default function RecadosPage() {
   const [alunaId, setAlunaId] = useState("");
   const [salvando, setSalvando] = useState(false);
   const [erro, setErro] = useState<string | null>(null);
+  const [confirmandoId, setConfirmandoId] = useState<string | null>(null);
+  const [excluindoId, setExcluindoId] = useState<string | null>(null);
 
   function carregar() {
     api.get<Recado[]>("/recados").then(setRecados);
@@ -48,6 +51,20 @@ export default function RecadosPage() {
       setErro(err instanceof Error ? err.message : "Erro ao enviar recado");
     } finally {
       setSalvando(false);
+    }
+  }
+
+  async function handleDelete(id: string) {
+    setExcluindoId(id);
+    setErro(null);
+    try {
+      await api.delete(`/recados/${id}`);
+      setConfirmandoId(null);
+      carregar();
+    } catch (err) {
+      setErro(err instanceof Error ? err.message : "Erro ao excluir recado");
+    } finally {
+      setExcluindoId(null);
     }
   }
 
@@ -103,21 +120,50 @@ export default function RecadosPage() {
       {erro && <p className="text-red-600">{erro}</p>}
 
       {recados.length === 0 ? (
-        <p className="text-neutral-500">Nenhum recado enviado ainda.</p>
+        <EmptyState message="Nenhum recado enviado ainda." />
       ) : (
         <ul className="space-y-3">
           {recados.map((r) => (
             <li key={r.id} className="app-card">
-              <div className="flex items-center justify-between">
+              <div className="flex items-start justify-between gap-2">
                 <p className="font-medium text-neutral-900">{r.titulo}</p>
-                <span className="text-xs text-neutral-400">
+                <span className="shrink-0 rounded-full bg-neutral-100 px-2.5 py-0.5 text-xs font-medium text-neutral-600">
                   {r.aluna ? r.aluna.nome : "Todas as alunas"}
                 </span>
               </div>
               <p className="mt-1 text-sm text-neutral-600">{r.mensagem}</p>
-              <p className="mt-1 text-xs text-neutral-400">
-                {new Date(r.createdAt).toLocaleDateString("pt-BR")}
-              </p>
+              <div className="mt-2 flex items-center justify-between gap-2">
+                <p className="text-xs text-neutral-400">
+                  {new Date(r.createdAt).toLocaleDateString("pt-BR")}
+                </p>
+                <div className="flex items-center gap-2 text-xs font-medium">
+                  {confirmandoId === r.id ? (
+                    <>
+                      <span className="text-neutral-500">Excluir este recado?</span>
+                      <button
+                        onClick={() => handleDelete(r.id)}
+                        disabled={excluindoId === r.id}
+                        className="-m-1.5 p-1.5 text-red-600 hover:text-red-700 disabled:opacity-50"
+                      >
+                        {excluindoId === r.id ? "Excluindo..." : "Sim"}
+                      </button>
+                      <button
+                        onClick={() => setConfirmandoId(null)}
+                        className="-m-1.5 p-1.5 text-neutral-400 hover:text-neutral-600"
+                      >
+                        Cancelar
+                      </button>
+                    </>
+                  ) : (
+                    <button
+                      onClick={() => setConfirmandoId(r.id)}
+                      className="-m-1.5 p-1.5 text-neutral-400 hover:text-red-600"
+                    >
+                      Excluir
+                    </button>
+                  )}
+                </div>
+              </div>
             </li>
           ))}
         </ul>

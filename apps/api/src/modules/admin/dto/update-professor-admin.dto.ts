@@ -10,6 +10,10 @@ export class UpdateProfessorAdminDto {
   telefone?: string;
 
   @IsOptional()
+  @IsString()
+  cpf?: string;
+
+  @IsOptional()
   @IsNumber()
   @Min(0)
   @Max(100)

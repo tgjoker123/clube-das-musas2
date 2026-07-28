@@ -1,4 +1,4 @@
-import { ForbiddenException, Injectable } from "@nestjs/common";
+import { ForbiddenException, Injectable, NotFoundException } from "@nestjs/common";
 import { PrismaService } from "../../core/database/prisma.service";
 import type { CreateRecadoDto } from "./dto/create-recado.dto";
 
@@ -31,6 +31,16 @@ export class RecadosService {
       orderBy: { createdAt: "desc" },
       take: 50,
     });
+  }
+
+  async remove(professorId: string, recadoId: string) {
+    const recado = await this.prisma.recado.findUnique({ where: { id: recadoId } });
+    if (!recado) throw new NotFoundException("Recado não encontrado");
+    if (recado.professorId !== professorId) {
+      throw new ForbiddenException("Recado não pertence a este professor");
+    }
+    await this.prisma.recado.delete({ where: { id: recadoId } });
+    return { ok: true };
   }
 
   async listForAluna(alunaId: string) {

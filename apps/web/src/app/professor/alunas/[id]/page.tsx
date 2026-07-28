@@ -29,6 +29,7 @@ interface AlunaDetalhe {
   id: string;
   nome: string;
   email: string;
+  cpf: string | null;
   telefone: string | null;
   dataNascimento: string;
   status: "ativa" | "suspensa" | "inadimplente";
@@ -45,6 +46,7 @@ export default function AlunaDetalhePage({ params }: { params: Promise<{ id: str
   const [erro, setErro] = useState<string | null>(null);
 
   const [nome, setNome] = useState("");
+  const [cpf, setCpf] = useState("");
   const [telefone, setTelefone] = useState("");
   const [dataNascimento, setDataNascimento] = useState("");
   const [status, setStatus] = useState<AlunaDetalhe["status"]>("ativa");
@@ -63,6 +65,7 @@ export default function AlunaDetalhePage({ params }: { params: Promise<{ id: str
       .then((data) => {
         setAluna(data);
         setNome(data.nome);
+        setCpf(data.cpf ?? "");
         setTelefone(data.telefone ?? "");
         setDataNascimento(data.dataNascimento.slice(0, 10));
         setStatus(data.status);
@@ -75,7 +78,14 @@ export default function AlunaDetalhePage({ params }: { params: Promise<{ id: str
 
   async function salvarDadosBasicos() {
     try {
-      await api.patch(`/students/${id}`, { nome, telefone, dataNascimento, status, observacoes });
+      await api.patch(`/students/${id}`, {
+        nome,
+        cpf: cpf || undefined,
+        telefone,
+        dataNascimento,
+        status,
+        observacoes,
+      });
       carregar();
     } catch (err) {
       setErro(err instanceof Error ? err.message : "Erro ao salvar");
@@ -189,6 +199,16 @@ export default function AlunaDetalhePage({ params }: { params: Promise<{ id: str
               type="text"
               value={nome}
               onChange={(e) => setNome(e.target.value)}
+              className="app-input mt-1"
+            />
+          </label>
+          <label className="block text-sm text-neutral-600">
+            CPF
+            <input
+              type="text"
+              placeholder="Somente números"
+              value={cpf}
+              onChange={(e) => setCpf(e.target.value)}
               className="app-input mt-1"
             />
           </label>
