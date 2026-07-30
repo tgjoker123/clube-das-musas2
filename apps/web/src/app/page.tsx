@@ -1,112 +1,167 @@
-import Image from "next/image";
 import Link from "next/link";
+import { BrandMark } from "@/components/brand-mark";
 
-const RECURSOS = [
+const PILARES = [
   {
-    titulo: "Ficha de treino digital",
-    descricao: "Exercícios com vídeo demonstrativo, séries, repetições e carga, sempre à mão.",
-    icone: (
-      <path d="M6.5 6.5 17.5 17.5M4 4l3 3M20 20l-3-3M8.5 4 4 8.5M15.5 20 20 15.5M2 6l4-4M18 22l4-4" />
-    ),
-  },
-  {
-    titulo: "Check-in e evolução",
+    titulo: "Metodologia Feminina",
     descricao:
-      "Registre carga e repetições a cada treino, acompanhe seus recordes pessoais e comemore no feed com as colegas.",
-    icone: (
-      <>
-        <path d="M4 8a2 2 0 0 1 2-2h1.5l1-1.5h7l1 1.5H18a2 2 0 0 1 2 2v9a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2z" />
-        <circle cx="12" cy="13" r="3.2" />
-      </>
-    ),
+      "Protocolos focados em definição, postura e hipertrofia nas regiões de maior interesse (glúteos, pernas e abdômen).",
   },
   {
-    titulo: "Evolução acompanhada",
-    descricao: "Anamnese, exames e evolução física centralizados no perfil de cada aluna.",
-    icone: <path d="M4 19V9m6.5 10V5m6.5 14v-7" />,
+    titulo: "Comunidade Exclusiva",
+    descricao:
+      "Conecte-se com mulheres alinhadas ao mesmo objetivo. Troca de experiências, motivação e suporte constante.",
+  },
+  {
+    titulo: "Experiência Presencial",
+    descricao: "Acesso garantido a encontros VIPs e ao consagrado evento MUSAS Day.",
   },
 ];
 
+function LogoLockup() {
+  return (
+    <Link href="/" className="flex items-center gap-2.5 sm:gap-3">
+      <BrandMark size={34} />
+      <span className="leading-none">
+        <span className="font-brand block text-[0.55rem] tracking-[0.32em] text-white/65 sm:text-[0.6rem]">
+          CLUBE DAS
+        </span>
+        <span className="font-brand gold-heading mt-0.5 block text-base tracking-[0.14em] sm:text-lg">
+          MUSAS
+        </span>
+      </span>
+    </Link>
+  );
+}
+
 export default function HomePage() {
   return (
-    <main className="brand-surface relative flex min-h-screen flex-col items-center overflow-hidden px-5 py-16 sm:px-6 sm:py-24">
-      <div
-        className="pointer-events-none absolute inset-0 opacity-40"
-        style={{
-          backgroundImage:
-            "radial-gradient(1px 1px at 20% 30%, rgba(201,162,39,0.5) 0, transparent 0), radial-gradient(1px 1px at 70% 60%, rgba(201,162,39,0.4) 0, transparent 0), radial-gradient(1px 1px at 40% 80%, rgba(201,162,39,0.35) 0, transparent 0), radial-gradient(1px 1px at 85% 20%, rgba(201,162,39,0.4) 0, transparent 0)",
-          backgroundSize: "600px 600px",
-        }}
-      />
-
-      <div className="relative z-10 flex flex-col items-center text-center">
-        <Image
-          src="/brand/logo-preto-dourado.png"
-          alt="Clube das Musas"
-          width={120}
-          height={120}
-          priority
-          className="animate-float-glow h-24 w-24 rounded-full sm:h-28 sm:w-28"
-        />
-        <p className="animate-fade-in-up mt-6 font-brand text-xs tracking-[0.4em] text-[color:var(--color-gold-light)] uppercase">
-          Clube das
-        </p>
-        <h1 className="animate-fade-in-up stagger-1 font-brand shimmer-text text-5xl font-semibold sm:text-8xl">
-          Musas
-        </h1>
-        <p className="animate-fade-in-up stagger-2 mt-5 max-w-lg text-sm text-white/60 sm:mt-6 sm:text-base">
-          O Clube das Musas reúne mulheres com um propósito em comum: cuidar do corpo,
-          elevar a autoestima e evoluir de verdade, sem abrir mão de leveza e conexão.
-          Aqui você treina acompanhada, comemora cada progresso e faz parte de uma
-          comunidade que entende que saúde e corpo bonito andam junto com motivação e
-          apoio de verdade.
-        </p>
-
-        <div className="animate-fade-in-up stagger-3 mt-8 flex w-full flex-col gap-3 sm:mt-10 sm:w-auto sm:flex-row sm:gap-4">
-          <Link
-            href="/login"
-            className="gold-button rounded-full px-8 py-3 text-center text-sm font-medium tracking-wide"
-          >
-            Entrar
-          </Link>
-          <Link
-            href="/quero-fazer-parte"
-            className="gold-outline-button rounded-full px-8 py-3 text-center text-sm font-medium tracking-wide"
-          >
-            Quero fazer parte
-          </Link>
-        </div>
-      </div>
-
-      <div className="relative z-10 mt-16 h-px w-full max-w-4xl bg-gradient-to-r from-transparent via-[color:var(--color-gold)]/40 to-transparent sm:mt-24" />
-
-      <div className="relative z-10 mt-10 grid w-full max-w-4xl gap-4 sm:mt-16 sm:grid-cols-3">
-        {RECURSOS.map((recurso, i) => (
-          <div
-            key={recurso.titulo}
-            className={`brand-card group animate-fade-in-up rounded-2xl p-6 text-left transition-transform duration-300 hover:-translate-y-1 stagger-${i + 2}`}
-          >
-            <span className="inline-flex h-11 w-11 items-center justify-center rounded-full border border-[color:var(--color-gold)]/30 bg-[color:var(--color-gold)]/10 transition-colors group-hover:bg-[color:var(--color-gold)]/20">
-              <svg
-                width="20"
-                height="20"
-                viewBox="0 0 24 24"
-                fill="none"
-                stroke="var(--color-gold-light)"
-                strokeWidth="1.6"
-                strokeLinecap="round"
-                strokeLinejoin="round"
-              >
-                {recurso.icone}
-              </svg>
-            </span>
-            <p className="font-brand mt-4 text-lg text-[color:var(--color-gold-light)]">
-              {recurso.titulo}
-            </p>
-            <p className="mt-2 text-sm leading-relaxed text-white/55">{recurso.descricao}</p>
+    <main className="landing-surface min-h-screen overflow-x-hidden">
+      <header className="sticky top-0 z-30 border-b border-[color:var(--color-gold)]/15 bg-[#0a0908]/85 backdrop-blur-md">
+        <div className="mx-auto flex max-w-6xl items-center justify-between gap-3 px-4 py-3 sm:px-6 sm:py-4">
+          <LogoLockup />
+          <div className="flex items-center gap-3 sm:gap-5">
+            <Link
+              href="/login"
+              className="text-xs tracking-wide text-white/60 transition-colors hover:text-[color:var(--color-gold-light)] sm:text-sm"
+            >
+              Entrar
+            </Link>
+            <Link
+              href="/quero-fazer-parte"
+              className="landing-cta rounded-full px-4 py-2 text-[0.65rem] font-semibold tracking-[0.12em] whitespace-nowrap sm:px-6 sm:py-2.5 sm:text-xs"
+            >
+              QUERO SER MUSA
+            </Link>
           </div>
-        ))}
-      </div>
+        </div>
+      </header>
+
+      <section className="relative flex min-h-[calc(100svh-4rem)] items-center justify-center px-5 py-20 sm:px-6 sm:py-28">
+        <div className="animate-fade-in-up mx-auto max-w-3xl text-center">
+          <h1 className="font-brand text-3xl leading-[1.15] font-semibold tracking-wide text-white uppercase sm:text-5xl lg:text-6xl">
+            Sua transformação no
+          </h1>
+          <p className="gold-heading mt-2 text-3xl leading-[1.15] font-bold tracking-tight uppercase sm:mt-3 sm:text-5xl lg:text-6xl">
+            Clube das Musas
+          </p>
+          <p className="animate-fade-in-up stagger-1 mx-auto mt-6 max-w-xl text-sm leading-relaxed text-white/60 sm:mt-8 sm:text-base">
+            Especialista em treinamento feminino. Conquiste sua melhor versão através do método
+            exclusivo desenvolvido por Ruan Mello.
+          </p>
+          <div className="animate-fade-in-up stagger-2 mt-9 sm:mt-11">
+            <Link
+              href="/quero-fazer-parte"
+              className="landing-cta inline-block rounded-full px-8 py-3.5 text-xs font-semibold tracking-[0.14em] sm:px-10 sm:py-4 sm:text-sm"
+            >
+              QUERO FAZER PARTE DO CLUBE
+            </Link>
+          </div>
+        </div>
+      </section>
+
+      <div className="landing-divider mx-auto max-w-6xl" />
+
+      <section className="px-5 py-16 sm:px-6 sm:py-24">
+        <div className="mx-auto max-w-6xl">
+          <h2 className="text-center text-2xl font-semibold tracking-wide uppercase sm:text-4xl">
+            <span className="font-brand text-white">O ecossistema </span>
+            <span className="gold-heading font-brand">das Musas</span>
+          </h2>
+
+          <ul className="mt-10 grid gap-4 sm:mt-14 sm:gap-5 md:grid-cols-3">
+            {PILARES.map((pilar, i) => (
+              <li
+                key={pilar.titulo}
+                className={`landing-card animate-fade-in-up stagger-${i + 1} p-6 sm:p-7`}
+              >
+                <h3 className="font-brand text-lg tracking-wide text-[color:var(--color-gold-light)] sm:text-xl">
+                  {pilar.titulo}
+                </h3>
+                <p className="mt-3 text-sm leading-relaxed text-white/55">{pilar.descricao}</p>
+              </li>
+            ))}
+          </ul>
+        </div>
+      </section>
+
+      <section className="px-5 pb-16 sm:px-6 sm:pb-24">
+        <div className="mx-auto max-w-3xl">
+          <h2 className="text-2xl font-semibold sm:text-4xl">
+            <span className="font-brand block text-white">Seu treinador:</span>
+            <span className="gold-heading mt-1 block font-bold tracking-tight">Ruan Mello</span>
+          </h2>
+          <p className="mt-5 text-sm leading-relaxed text-white/60 sm:text-base">
+            Personal Trainer focado em extrair a melhor estética e performance do corpo feminino.
+          </p>
+          <p className="mt-4 text-sm leading-relaxed text-white/60 sm:text-base">
+            Mais do que planilhas de treino, o Clube das Musas entrega acompanhamento estratégico,
+            mentalidade e um ambiente desenhado para acelerar seus resultados.
+          </p>
+        </div>
+      </section>
+
+      <div className="landing-divider" />
+
+      <section className="px-5 py-20 text-center sm:px-6 sm:py-28">
+        <div className="mx-auto max-w-2xl">
+          <h2 className="text-2xl font-semibold sm:text-4xl">
+            <span className="font-brand text-white">Pronta para ser a </span>
+            <span className="gold-heading font-bold tracking-tight">Próxima Musa?</span>
+          </h2>
+          <p className="mt-5 text-sm text-white/55 sm:text-base">
+            As vagas para o acompanhamento individualizado são limitadas.
+          </p>
+          <div className="mt-9 sm:mt-11">
+            <Link
+              href="/quero-fazer-parte"
+              className="landing-cta inline-block rounded-full px-8 py-3.5 text-xs font-semibold tracking-[0.14em] sm:px-10 sm:py-4 sm:text-sm"
+            >
+              GARANTIR MINHA VAGA AGORA
+            </Link>
+          </div>
+        </div>
+      </section>
+
+      <footer className="border-t border-[color:var(--color-gold)]/15 px-5 py-8 text-center text-xs text-white/45 sm:px-6">
+        <p>© Clube das Musas - Ruan Mello | Todos os direitos reservados.</p>
+        <p className="mt-1.5">
+          Instagram:{" "}
+          <a
+            href="https://instagram.com/_ruanmello"
+            target="_blank"
+            rel="noreferrer"
+            className="text-[color:var(--color-gold-light)] hover:underline"
+          >
+            @_ruanmello
+          </a>
+        </p>
+        <p className="mt-4">
+          <Link href="/login" className="text-white/40 transition-colors hover:text-white/70">
+            Já é aluna? Entrar na plataforma
+          </Link>
+        </p>
+      </footer>
     </main>
   );
 }

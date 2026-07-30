@@ -117,6 +117,68 @@ body {
   background: rgba(255, 255, 255, 0.06);
 }
 
+/* ---- Landing page ---- */
+
+/* Texto em dourado com brilho no centro, usado nos títulos de destaque */
+.gold-heading {
+  background: linear-gradient(
+    100deg,
+    var(--color-gold-dark) 0%,
+    var(--color-gold) 25%,
+    #f7e6b0 50%,
+    var(--color-gold) 75%,
+    var(--color-gold-dark) 100%
+  );
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
+}
+
+/* Fundo preto com halo dourado suave */
+.landing-surface {
+  background:
+    radial-gradient(ellipse 70% 45% at 50% 0%, rgba(201, 162, 39, 0.13), transparent 70%),
+    radial-gradient(ellipse 60% 40% at 50% 100%, rgba(201, 162, 39, 0.07), transparent 70%),
+    #0a0908;
+  color: #f5f1e6;
+}
+
+.landing-card {
+  background: linear-gradient(160deg, rgba(255, 255, 255, 0.045), rgba(255, 255, 255, 0.015));
+  border: 1px solid rgba(201, 162, 39, 0.2);
+  border-radius: 1rem;
+  transition: border-color 0.3s ease, transform 0.3s ease, box-shadow 0.3s ease;
+}
+
+.landing-card:hover {
+  border-color: rgba(201, 162, 39, 0.45);
+  transform: translateY(-4px);
+  box-shadow: 0 20px 44px -24px rgba(201, 162, 39, 0.45);
+}
+
+/* Botão dourado da landing, com halo ao redor */
+.landing-cta {
+  background: linear-gradient(100deg, #8a6d1a, #e8cd75 45%, #f7e6b0 55%, #c9a227 80%, #8a6d1a);
+  color: #14120f;
+  box-shadow:
+    0 0 28px -6px rgba(201, 162, 39, 0.55),
+    0 10px 26px -14px rgba(0, 0, 0, 0.9);
+  transition: filter 0.25s ease, transform 0.25s ease, box-shadow 0.25s ease;
+}
+
+.landing-cta:hover {
+  filter: brightness(1.07);
+  transform: translateY(-2px);
+  box-shadow:
+    0 0 40px -4px rgba(201, 162, 39, 0.75),
+    0 14px 30px -14px rgba(0, 0, 0, 0.9);
+}
+
+.landing-divider {
+  height: 1px;
+  background: linear-gradient(90deg, transparent, rgba(201, 162, 39, 0.35), transparent);
+}
+
 /* Superfícies da área logada (marfim quente + dourado como destaque) */
 
 /* Fundo da área logada: marfim com brilho dourado no topo, em vez de cinza chapado */
