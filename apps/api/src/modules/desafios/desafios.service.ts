@@ -99,6 +99,16 @@ export class DesafiosService {
     return ranking.sort((a, b) => b.pontos - a.pontos);
   }
 
+  async remove(professorId: string, desafioId: string) {
+    const desafio = await this.prisma.desafio.findUnique({ where: { id: desafioId } });
+    if (!desafio) throw new NotFoundException("Desafio não encontrado");
+    if (desafio.professorId !== professorId) {
+      throw new ForbiddenException("Desafio não pertence a este professor");
+    }
+    await this.prisma.desafio.delete({ where: { id: desafioId } });
+    return { ok: true };
+  }
+
   async getRanking(professorId: string, desafioId: string) {
     const desafio = await this.prisma.desafio.findUnique({ where: { id: desafioId } });
     if (!desafio) throw new NotFoundException("Desafio não encontrado");

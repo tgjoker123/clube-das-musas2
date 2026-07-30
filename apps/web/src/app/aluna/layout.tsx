@@ -5,6 +5,7 @@ import { usePathname, useRouter } from "next/navigation";
 import { createClient } from "@/lib/supabase/client";
 import { BrandMark } from "@/components/brand-mark";
 import { useRoleGuard } from "@/components/use-role-guard";
+import { BottomNav } from "@/components/bottom-nav";
 
 const LINKS = [
   { href: "/aluna/treino", label: "Treino" },
@@ -63,21 +64,7 @@ export default function AlunaLayout({ children }: { children: React.ReactNode })
         </div>
       </header>
       <div className="mx-auto max-w-3xl animate-fade-in p-4 pb-24 sm:p-6 sm:pb-6">{children}</div>
-      <nav className="fixed inset-x-0 bottom-0 z-20 flex justify-around gap-1 border-t border-neutral-200 bg-white px-1.5 py-2.5 text-[12px] shadow-[0_-6px_16px_rgba(0,0,0,0.12)] sm:hidden">
-        {LINKS.map((link) => (
-          <Link
-            key={link.href}
-            href={link.href}
-            className={`flex flex-1 items-center justify-center rounded-full px-1.5 py-2 text-center font-medium transition-colors ${
-              pathname === link.href
-                ? "bg-[color:var(--color-gold)] text-black shadow-sm"
-                : "text-neutral-700"
-            }`}
-          >
-            {link.label}
-          </Link>
-        ))}
-      </nav>
+      <BottomNav itens={LINKS} ativo={pathname} />
     </div>
   );
 }

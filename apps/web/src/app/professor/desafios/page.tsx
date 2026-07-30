@@ -27,11 +27,26 @@ function labelMetrica(valor: string): string {
   return METRICAS.find((m) => m.valor === valor)?.label ?? valor;
 }
 
-function DesafioCard({ desafio }: { desafio: Desafio }) {
+function DesafioCard({ desafio, onRemovido }: { desafio: Desafio; onRemovido: () => void }) {
   const [aberto, setAberto] = useState(false);
   const [ranking, setRanking] = useState<RankingItem[] | null>(null);
   const [unidade, setUnidade] = useState("pontos");
   const [erro, setErro] = useState<string | null>(null);
+  const [confirmando, setConfirmando] = useState(false);
+  const [excluindo, setExcluindo] = useState(false);
+
+  async function excluir() {
+    setExcluindo(true);
+    setErro(null);
+    try {
+      await api.delete(`/desafios/${desafio.id}`);
+      onRemovido();
+    } catch (err) {
+      setErro(err instanceof Error ? err.message : "Erro ao excluir desafio");
+      setExcluindo(false);
+      setConfirmando(false);
+    }
+  }
 
   async function toggle() {
     if (!aberto && !ranking) {
@@ -53,23 +68,52 @@ function DesafioCard({ desafio }: { desafio: Desafio }) {
 
   return (
     <li className="app-card">
-      <div className="flex items-center justify-between gap-2">
-        <div>
-          <p className="font-medium text-neutral-900">{desafio.titulo}</p>
+      <div className="flex items-start justify-between gap-3">
+        <div className="min-w-0">
+          <p className="font-medium break-words text-neutral-900">{desafio.titulo}</p>
           <p className="text-xs text-neutral-400">{labelMetrica(desafio.metrica)}</p>
-          <p className="text-sm text-neutral-500">
-            {new Date(desafio.dataInicio).toLocaleDateString("pt-BR")} —{" "}
-            {new Date(desafio.dataFim).toLocaleDateString("pt-BR")}
-            {emAndamento && (
-              <span className="ml-2 rounded-full bg-emerald-100 px-2 py-0.5 text-xs font-medium text-emerald-700">
-                Em andamento
-              </span>
-            )}
-          </p>
         </div>
-        <button onClick={toggle} className="app-link-gold shrink-0 text-xs font-medium">
+        {emAndamento && (
+          <span className="shrink-0 rounded-full bg-emerald-100 px-2.5 py-0.5 text-xs font-medium text-emerald-700">
+            Em andamento
+          </span>
+        )}
+      </div>
+
+      <p className="mt-1.5 text-sm text-neutral-500">
+        {new Date(desafio.dataInicio).toLocaleDateString("pt-BR")} —{" "}
+        {new Date(desafio.dataFim).toLocaleDateString("pt-BR")}
+      </p>
+
+      <div className="mt-3 flex flex-wrap items-center gap-x-4 gap-y-2 text-xs font-medium">
+        <button onClick={toggle} className="app-link-gold">
           {aberto ? "Ocultar ranking" : "Ver ranking"}
         </button>
+        {confirmando ? (
+          <>
+            <span className="text-neutral-500">Excluir este desafio?</span>
+            <button
+              onClick={excluir}
+              disabled={excluindo}
+              className="text-red-600 hover:text-red-700 disabled:opacity-50"
+            >
+              {excluindo ? "Excluindo..." : "Sim"}
+            </button>
+            <button
+              onClick={() => setConfirmando(false)}
+              className="text-neutral-400 hover:text-neutral-600"
+            >
+              Cancelar
+            </button>
+          </>
+        ) : (
+          <button
+            onClick={() => setConfirmando(true)}
+            className="text-neutral-400 hover:text-red-600"
+          >
+            Excluir
+          </button>
+        )}
       </div>
 
       {erro && <p className="mt-2 text-xs text-red-600">{erro}</p>}
@@ -163,8 +207,8 @@ export default function DesafiosPage() {
             ))}
           </select>
         </label>
-        <div className="flex gap-2">
-          <label className="flex-1 text-xs text-neutral-500">
+        <div className="grid grid-cols-2 gap-2">
+          <label className="min-w-0 text-xs text-neutral-500">
             Início
             <input
               type="date"
@@ -174,7 +218,7 @@ export default function DesafiosPage() {
               className="app-input mt-1"
             />
           </label>
-          <label className="flex-1 text-xs text-neutral-500">
+          <label className="min-w-0 text-xs text-neutral-500">
             Fim
             <input
               type="date"
@@ -201,7 +245,7 @@ export default function DesafiosPage() {
       ) : (
         <ul className="grid gap-3 sm:grid-cols-2">
           {desafios.map((d) => (
-            <DesafioCard key={d.id} desafio={d} />
+            <DesafioCard key={d.id} desafio={d} onRemovido={carregar} />
           ))}
         </ul>
       )}

@@ -104,6 +104,8 @@ body {
   background: rgba(255, 255, 255, 0.04);
   border: 1px solid rgba(255, 255, 255, 0.12);
   color: #f5f1e6;
+  /* mesma regra dos 16px para não disparar o zoom do iOS */
+  font-size: 1rem;
   transition: border-color 0.2s ease, background-color 0.2s ease;
 }
 
@@ -186,8 +188,8 @@ body {
   background:
     radial-gradient(ellipse 80% 40% at 50% 0%, rgba(201, 162, 39, 0.1), transparent 70%),
     linear-gradient(180deg, #fbf9f4 0%, #f6f4ef 100%);
-  background-attachment: fixed;
-  min-height: 100vh;
+  background-repeat: no-repeat;
+  min-height: 100dvh;
 }
 
 /* Cabeçalho de página: título serifado grande + régua dourada */
@@ -295,9 +297,16 @@ body {
   border-radius: 0.75rem;
   border: 1px solid rgba(26, 24, 20, 0.14);
   padding: 0.65rem 0.95rem;
-  font-size: 0.875rem;
+  /* 16px no celular: abaixo disso o iOS dá zoom sozinho ao focar o campo */
+  font-size: 1rem;
   background: #fdfcfa;
   transition: border-color 0.2s ease, box-shadow 0.2s ease, background-color 0.2s ease;
+}
+
+@media (min-width: 640px) {
+  .app-input {
+    font-size: 0.875rem;
+  }
 }
 
 .app-input:focus {
@@ -305,6 +314,55 @@ body {
   background: #fff;
   border-color: var(--color-gold);
   box-shadow: 0 0 0 3px rgba(201, 162, 39, 0.15);
+}
+
+/* Menu inferior do celular: o degradê na borda avisa que ainda há itens
+   fora da tela, e some sozinho quando a rolagem chega ao fim. */
+.bottom-nav {
+  scrollbar-width: none;
+  -webkit-overflow-scrolling: touch;
+  mask-image: linear-gradient(
+    90deg,
+    transparent 0,
+    #000 var(--fade-inicio, 0px),
+    #000 calc(100% - var(--fade-fim, 26px)),
+    transparent 100%
+  );
+}
+
+.bottom-nav::-webkit-scrollbar {
+  display: none;
+}
+
+.bottom-nav-seta {
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  display: flex;
+  align-items: center;
+  padding: 0 0.35rem;
+  font-size: 0.8rem;
+  color: var(--color-gold-dark);
+  pointer-events: none;
+  animation: cutuca-lateral 1.6s ease-in-out infinite;
+}
+
+@keyframes cutuca-lateral {
+  0%,
+  100% {
+    transform: translateX(0);
+    opacity: 0.55;
+  }
+  50% {
+    transform: translateX(3px);
+    opacity: 1;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .bottom-nav-seta {
+    animation: none;
+  }
 }
 
 /* Barra superior da área logada, com fio dourado na base */

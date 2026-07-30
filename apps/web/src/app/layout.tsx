@@ -1,4 +1,4 @@
-import type { Metadata } from "next";
+import type { Metadata, Viewport } from "next";
 import { Playfair_Display, Inter } from "next/font/google";
 import "./globals.css";
 
@@ -18,10 +18,18 @@ export const metadata: Metadata = {
   description: "Plataforma de gamificação para personal trainers e alunas",
 };
 
+export const viewport: Viewport = {
+  width: "device-width",
+  initialScale: 1,
+  viewportFit: "cover",
+};
+
 export default function RootLayout({ children }: { children: React.ReactNode }) {
   return (
     <html lang="pt-BR" className={`${playfair.variable} ${inter.variable}`}>
-      <body className="min-h-screen bg-neutral-50 text-neutral-900">{children}</body>
+      <body className="min-h-screen overflow-x-hidden bg-neutral-50 text-neutral-900">
+        {children}
+      </body>
     </html>
   );
 }
