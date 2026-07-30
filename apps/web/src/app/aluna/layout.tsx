@@ -4,6 +4,7 @@ import Link from "next/link";
 import { usePathname, useRouter } from "next/navigation";
 import { createClient } from "@/lib/supabase/client";
 import { BrandMark } from "@/components/brand-mark";
+import { useRoleGuard } from "@/components/use-role-guard";
 
 const LINKS = [
   { href: "/aluna/treino", label: "Treino" },
@@ -16,11 +17,16 @@ const LINKS = [
 export default function AlunaLayout({ children }: { children: React.ReactNode }) {
   const router = useRouter();
   const pathname = usePathname();
+  const { estado } = useRoleGuard("aluna");
 
   async function handleLogout() {
     const supabase = createClient();
     await supabase.auth.signOut();
     router.push("/login");
+  }
+
+  if (estado === "verificando") {
+    return <div className="app-shell" />;
   }
 
   return (

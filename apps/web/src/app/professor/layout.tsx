@@ -1,11 +1,10 @@
 "use client";
 
-import { useEffect, useState } from "react";
 import Link from "next/link";
 import { usePathname, useRouter } from "next/navigation";
 import { createClient } from "@/lib/supabase/client";
 import { BrandMark } from "@/components/brand-mark";
-import { api } from "@/lib/api";
+import { useRoleGuard } from "@/components/use-role-guard";
 
 const BASE_LINKS = [
   { href: "/professor/dashboard", label: "Dashboard" },
@@ -17,21 +16,10 @@ const BASE_LINKS = [
   { href: "/professor/interessadas", label: "Interessadas" },
 ];
 
-interface Me {
-  isAdmin?: boolean;
-}
-
 export default function ProfessorLayout({ children }: { children: React.ReactNode }) {
   const router = useRouter();
   const pathname = usePathname();
-  const [isAdmin, setIsAdmin] = useState(false);
-
-  useEffect(() => {
-    api
-      .get<Me>("/professors/me")
-      .then((me) => setIsAdmin(!!me.isAdmin))
-      .catch(() => setIsAdmin(false));
-  }, []);
+  const { estado, isAdmin } = useRoleGuard("professor");
 
   const links = isAdmin
     ? [...BASE_LINKS, { href: "/professor/admin", label: "Ajustes" }]
@@ -41,6 +29,10 @@ export default function ProfessorLayout({ children }: { children: React.ReactNod
     const supabase = createClient();
     await supabase.auth.signOut();
     router.push("/login");
+  }
+
+  if (estado === "verificando") {
+    return <div className="app-shell" />;
   }
 
   return (
